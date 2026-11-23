@@ -3632,28 +3632,28 @@ function to4(p){if(p.choices&&p.choices.length>=2)return p;const a=p.ans,n=typeo
  return {...p,...C(fnum(n),...shuf(w).slice(0,3))}}
 const DRAGON=`<div class="drg"><div class="drg-e">🐉</div></div>`;
 (function(){const css=document.createElement('style');css.textContent=`
-.gov{position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 50% 30%,#3a1d6e,#120a2e 70%);color:#fff;overflow:auto;font-family:Nunito}
+.gov{position:fixed;inset:0;z-index:9000;background:radial-gradient(1000px 700px at 100% 0%,rgba(168,98,236,.45),transparent 60%),linear-gradient(120deg,#4B3BC4,#6342D2 50%,#7E46D8);color:#fff;overflow:auto;font-family:Nunito}
 .gov .gvin{max-width:1250px;margin:0 auto;padding:18px}
-.gov h1{font:900 34px Nunito;margin:0}.gov .mut{color:#c8c2ee}
+.gov h1{font:900 34px Nunito;margin:0}.gov .mut{color:#eef0ff}
 .gtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .drg{position:relative;text-align:center;margin:6px 0}.drg-e{font-size:170px;line-height:1;filter:drop-shadow(0 0 40px #ff5a36);animation:drgf 2.4s ease-in-out infinite}
 .drg.hit .drg-e{animation:drgh .35s}.drg.dead .drg-e{filter:grayscale(1);transform:rotate(90deg) scale(.7);opacity:.5;animation:none}
 @keyframes drgf{50%{transform:translateY(-10px) scale(1.03)}}@keyframes drgh{25%{transform:translateX(-14px) rotate(-6deg);filter:drop-shadow(0 0 40px #fff) brightness(2)}75%{transform:translateX(14px) rotate(6deg)}}
-.hpb{height:34px;border-radius:999px;background:#2a1650;border:3px solid #ffcf4a;overflow:hidden;position:relative}
+.hpb{height:34px;border-radius:999px;background:rgba(255,255,255,.25);border:3px solid #ffcf4a;overflow:hidden;position:relative}
 .hpb i{display:block;height:100%;background:linear-gradient(90deg,#ff3d3d,#ff9a3d);transition:width .5s}
 .hpb span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 18px Nunito;text-shadow:0 2px 4px #000}
 .dmgf{position:absolute;left:50%;top:40%;font:900 40px Nunito;color:#ffcf4a;text-shadow:0 3px 8px #000;animation:dmgf 1s forwards;pointer-events:none}
 @keyframes dmgf{to{transform:translate(-50%,-120px);opacity:0}}
 .gcols{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}@media(max-width:800px){.gcols{grid-template-columns:1fr}.drg-e{font-size:110px}}
-.gpan{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:14px}
+.gpan{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:14px}
 .gpan .prob{color:#fff}.gov .choice{color:#141b4d}
 .top5 div{display:flex;justify-content:space-between;padding:6px 10px;border-radius:12px;margin:4px 0;background:rgba(255,255,255,.07);font-weight:800}
-.mlad{display:flex;flex-direction:column-reverse;gap:3px}.mlad div{padding:5px 12px;border-radius:10px;font-weight:900;display:flex;justify-content:space-between;color:#c8c2ee}
+.mlad{display:flex;flex-direction:column-reverse;gap:3px}.mlad div{padding:5px 12px;border-radius:10px;font-weight:900;display:flex;justify-content:space-between;color:#eef0ff}
 .mlad .sf{color:#ffcf4a}.mlad .cu{background:#ffcf4a;color:#141b4d}.mlad .dn{color:#6fe3a5}
-.mq{font:900 28px Nunito;text-align:center;padding:18px;border-radius:20px;background:linear-gradient(180deg,#1e2a7a,#0f1650);border:3px solid #6f8cff;margin-bottom:12px}
-.mch{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mch button{font:900 22px Nunito;padding:16px;border-radius:999px;border:3px solid #6f8cff;background:#0f1650;color:#fff;cursor:pointer;text-align:left}
+.mq{font:900 28px Nunito;text-align:center;padding:18px;border-radius:20px;background:rgba(255,255,255,.18);border:3px solid #fff;margin-bottom:12px}
+.mch{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mch button{font:900 22px Nunito;padding:16px;border-radius:999px;border:3px solid #fff;background:rgba(255,255,255,.16);color:#fff;cursor:pointer;text-align:left}
 .mch button b{color:#ffcf4a;margin-right:8px}.mch button.sel{background:#e47a2e;border-color:#ffcf4a}.mch button.ok{background:#1d9d62}.mch button.no{background:#c2414a}.mch button.hid{visibility:hidden}
-.mlife{display:flex;gap:10px;justify-content:center;margin:10px 0}.mlife button{font-size:22px;padding:10px 16px;border-radius:999px;border:3px solid #ffcf4a;background:#2a1650;color:#fff;cursor:pointer;font-weight:900}.mlife button:disabled{opacity:.3;cursor:default}
+.mlife{display:flex;gap:10px;justify-content:center;margin:10px 0}.mlife button{font-size:22px;padding:10px 16px;border-radius:999px;border:3px solid #ffcf4a;background:rgba(255,255,255,.18);color:#fff;cursor:pointer;font-weight:900}.mlife button:disabled{opacity:.3;cursor:default}
 .vbar{display:flex;align-items:center;gap:8px;margin:5px 0;font-weight:900}.vbar i{display:block;height:22px;background:#ffcf4a;border-radius:6px;transition:width .4s}
 .stban{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:8000;background:linear-gradient(135deg,#ff5a36,#7a4fd8);color:#fff;border:0;border-radius:999px;padding:16px 26px;font:900 20px Nunito;box-shadow:0 10px 30px rgba(0,0,0,.35);cursor:pointer;animation:drgf 1.6s infinite}`;document.head.appendChild(css)})();
 async function ensureClassTL(){if(!TL.meta){if(!tCode&&myClasses.length)tCode=myClasses[0].code;if(!tCode&&typeof PRESET_CLASSES!=='undefined'){const c=PRESET_CLASSES[0];await createClass(c.name,c.names,{code:c.code,pin:c.pin})}TL.meta=tCode?await getMeta(tCode):null;TL.called=TL.called||[]}}
