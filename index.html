@@ -263,6 +263,9 @@ table.t th{background:linear-gradient(180deg,#f5f7ff,#eef1fb)}
 .ropts{display:grid;grid-template-columns:1fr 1fr;gap:6px}.ropts button{border:0;border-radius:12px;padding:12px 6px;font:900 18px Nunito,system-ui,sans-serif;background:#f1f3fb;cursor:pointer;color:#141b4d}.ropts button:not([disabled]):hover{background:var(--c);color:#fff}
 .ropts button.cor{background:#1d9d62;color:#fff}.ropts button.wr{background:#e4572e;color:#fff}.rfoot{text-align:center;font:900 18px Nunito,system-ui,sans-serif;min-height:24px}
 .pod.p3{height:120px}
+.nlist{display:flex;flex-direction:column;gap:8px}.nrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:#f7f8fe}.nname{flex:1;min-width:0;display:flex;flex-direction:column}.nname b{font-size:16px}.nname span{font-size:13px;color:var(--mut)}
+.nbtns{display:flex;gap:6px}.nbtns button{border:0;width:52px;height:48px;border-radius:14px;background:#4057e3;color:#fff;font:900 19px Nunito,system-ui,sans-serif;cursor:pointer}.nbtns button:active{transform:scale(.93)}.nbtns button.nu{background:#e3e7f2;color:#141b4d;width:42px}
+@media(max-width:600px){.nrow{flex-direction:column;align-items:stretch}.nbtns button{flex:1}}
 </style>
 </head>
 <body>
@@ -1748,11 +1751,11 @@ function renderTeacher(){
     return;
   }
   if(tArea==='docs'&&tTab==='ktp'){renderKTP();docsHeader();return}
-  const AREA={board:['🖥 Интерактивті тақта',[]],cab:['👨‍🏫 Мұғалім кабинеті',[['mon','📊 Мониторинг'],['cls','👥 Сыныптар'],['journal','📒 Журнал']]],docs:['📁 Құжаттар',[['ktp','📅 ҚТЖ'],['kmj','📝 ҚМЖ'],['journal','📒 Журнал · Excel']]]}[tArea];
+  const AREA={board:['🖥 Интерактивті тақта',[]],cab:['👨‍🏫 Мұғалім кабинеті',[['note','📱 Дәптер баллы'],['mon','📊 Мониторинг'],['cls','👥 Сыныптар'],['journal','📒 Журнал']]],docs:['📁 Құжаттар',[['ktp','📅 ҚТЖ'],['kmj','📝 ҚМЖ'],['journal','📒 Журнал · Excel']]]}[tArea];
   if(tArea==='board')tTab='lesson';
   app().innerHTML=`<div class="card tarea"><div class="row" style="justify-content:space-between"><h1 style="margin:0">${AREA[0]}</h1><button class="btn ghost" id="toff">Шығу</button></div>${AREA[1].length?`<div class="steps">${AREA[1].map(([k,t])=>`<button class="${tTab===k?'on':''}" onclick="tTab='${k}';renderTeacher()">${t}</button>`).join('')}</div>`:''}</div><div id="tbody"></div>`;
   document.getElementById('toff').onclick=()=>{teacher=false;renderMe();renderHome()};
-  ({lesson:teacherLessons,mon:teacherMonitor,cls:teacherClasses,journal:teacherJournal,kmj:teacherKMJ})[tTab]();
+  ({lesson:teacherLessons,mon:teacherMonitor,cls:teacherClasses,journal:teacherJournal,kmj:teacherKMJ,note:teacherNote})[tTab]();
 }
 let rTab='all';
 const subjStat=(stars,subj)=>{const ks=Object.keys(stars||{}).map(Number).filter(p=>subj==='alg'?p<100:p>100);return {n:ks.length,st:ks.reduce((a,p)=>a+(stars[p]||0),0)}};
@@ -1929,9 +1932,8 @@ function drawSlide(){
       body=`<div class="row" style="justify-content:space-between"><h1 style="margin:0">Тақтаға шақыру · ${esc(TL.meta.name)}</h1>${myClasses.length>1?`<select onchange="tCode=this.value;TL.meta=undefined;TL.called=[];drawSlide()" style="padding:6px 10px;border-radius:10px;font:700 14px Nunito">${myClasses.map(c=>`<option value="${c.code}" ${c.code===tCode?'selected':''}>${esc(c.name)}</option>`).join('')}</select>`:''}</div>
       <div class="grid3" style="grid-template-columns:1fr 2fr;margin-top:12px"><div class="card" style="text-align:center;margin:0"><div class="mut" style="font-weight:800">Тақтаға шығады:</div><div id="bName" class="bname ${TL.cur?'chosen':''}">${TL.cur?esc(TL.cur.n):'?'}</div><button class="btn gold" onclick="pickStudent()">🎲 Оқушыны таңдау</button>
         <div class="row" style="justify-content:center;margin-top:14px;gap:6px"><button class="btn ok" onclick="givePoints(3)">✔ +3</button><button class="btn" onclick="givePoints(2)">+2</button><button class="btn ghost" onclick="givePoints(1)">+1</button><button class="btn ghost" style="color:var(--bad)" onclick="givePoints(0)">✘ 0</button></div>
-        <div class="mut" style="font-size:12px;margin-top:6px">3 – толық дұрыс · 2 – аздап қате · 1 – талпынды · 0 – орындамады</div></div>
-       <div class="card" style="margin:0"><div class="prob" style="font-size:28px">${p.q}</div>${fg?`<div class="figbox" style="max-width:420px">${fg}</div>`:''}${p.choices?`<div class="choices">${p.choices.map((c,k)=>`<div class="choice" style="font-size:20px">${'ABCD'[k]}) ${c}</div>`).join('')}</div>`:''}
-        <div class="row" style="margin-top:10px"><button class="btn ghost" onclick="this.outerHTML='<span class=pill style=\'font-size:20px;background:var(--ok2)\'>Жауап: <b>${esc(p.choices?p.ans:fnum(p.ans))}</b></span>'">Жауапты көрсету</button><button class="btn ghost" onclick="TL.bprob=plainOf([TL.l.g,...TL.l.gB,...TL.l.gC]);drawSlide()">🔄 Басқа есеп</button></div></div></div>
+        <div class="mut" style="font-size:12px;margin-top:6px">Қолмен өзгертуге болады</div></div>
+       <div class="card" style="margin:0"><div class="row" style="justify-content:space-between"><span class="pill" style="background:#e3f5ec">🤖 Платформа өзі бағалайды: ✔ 3 · ✘ 1</span><button class="btn ghost" style="padding:4px 10px" onclick="TL.bprob=plainOf([TL.l.g,...TL.l.gB,...TL.l.gC]);drawSlide()">🔄</button></div><div id="bbox" style="font-size:19px"></div></div></div>
       <div class="desc"><b>🔍 Кім тексереді:</b> мұғалім · <b>📋 Дескриптор:</b> шешу жолын түсіндіреді, формуланы дұрыс қолданады, жауабын тексереді · Балл оқушының журналына және «Жеке даму» картасына автоматты түрде түседі.</div>
       ${TL.called.length?`<div class="row" style="margin-top:10px">${TL.called.map(c=>`<span class="pill" style="background:${c.v>=2?'var(--ok2)':c.v===1?'#fff4cc':'var(--bad2)'}">${esc(c.n)}: ${c.v} б.</span>`).join('')}</div>`:''}`}
   } else if(sl.k==='abc'){
@@ -1957,12 +1959,13 @@ function drawSlide(){
    <div class="row" style="justify-content:space-between"><button class="btn ghost" onclick="tGo(-1)" ${i===0?'disabled':''}>← Артқа</button><button class="btn" onclick="tGo(1)" ${i===slides.length-1?'disabled':''}>Келесі кезең →</button></div>`;
   if(window._lclock)clearInterval(window._lclock);const tickC=()=>{const e=document.getElementById('lclock');if(!e||!TL)return;const sec2=Math.floor((Date.now()-TL.start)/1000);e.textContent=`🕒 ${Math.floor(sec2/60)}:${String(sec2%60).padStart(2,'0')} / 45:00`;e.style.color=sec2>45*60?'var(--bad)':''};tickC();window._lclock=setInterval(tickC,1000);
   if(sl.k==='board'&&TL.meta===undefined)boardSlideInit();
+  if(sl.k==='board'&&TL.meta&&document.getElementById('bbox')){const p=TL.bprob;if(!p._l)p._l=l;problemUI(document.getElementById('bbox'),p,ok=>{if(TL.cur)setTimeout(()=>givePoints(ok?3:1),1200);else toast('🎲 Алдымен оқушыны таңдаңыз – балл сонда журналға түседі')})}
   if(sl.k==='inter') INTER[l.it](document.getElementById('inter'));
   if(sl.k==='vis'){const k=TL.visk||visFor(l);VIS[k].init(document.getElementById('visbox'))}
   if(sl.k==='quiz')raceTick();
   if(sl.k==='kst'){const p=TL.kp;if(!p._l)p._l=l;problemUI(document.getElementById('kbox'),p,()=>{})}
   if(sl.k==='draw')problemUI(document.getElementById('dbox'),TL.dp,()=>{});
-  if(sl.k==='multi'){if(TL.meta===undefined)boardSlideInit();TL.mb.lanes.forEach((ln,i)=>{const b=document.getElementById('mb'+i);if(!b)return;problemUI(b,ln.p,ok=>{ln.ok=ok;const pb=document.getElementById('mbp'+i);if(pb&&ln.v==null){const btn=pb.querySelector(ok?'.ok':'button:nth-child(4)');if(btn)btn.style.outline='3px solid var(--gold)'}})})}
+  if(sl.k==='multi'){if(TL.meta===undefined)boardSlideInit();TL.mb.lanes.forEach((ln,i)=>{const b=document.getElementById('mb'+i);if(!b)return;problemUI(b,ln.p,ok=>{ln.ok=ok;if(ln.v==null&&ln.sid&&TL.meta&&TL.meta.roster)setTimeout(()=>mbAward(i,ok?3:1),700)})})}
   if(sl.k==='game'){const b=document.getElementById('showAns');b.onclick=()=>{document.getElementById('ansBox').innerHTML=`<span class="pill" style="font-size:22px;background:var(--ok2)">Жауап: <b>${esc(TL.prob.choices?TL.prob.ans:fnum(TL.prob.ans))}</b></span>`}}
   window.scrollTo(0,0);
 }
@@ -2528,9 +2531,14 @@ let myClasses=lsGet('mlu_tclasses',[]);           // мұғалімнің сын
 let tCode=(myClasses[0]||{}).code||'';           // таңдалған сынып
 const localMeta=c=>lsGet('mlu_meta_'+c,null);
 function presetMeta(c){const P=(typeof PRESET_CLASSES!=='undefined'?PRESET_CLASSES:[]).find(x=>x.code===c);if(!P)return null;const roster={};P.names.forEach((n,i)=>roster['s'+(i+1)]={n,h:fnv(c+':'+P.pin)});return {name:P.name,roster,pts:{},preset:true}}
+function mergeT(meta,list){if(!meta)return meta;meta.pts=meta.pts||{};list.forEach(r=>{if(!r||!r.sid)return;meta.pts[r.sid]=meta.pts[r.sid]||{};meta.pts[r.sid]['n'+r.t]=r});return meta}
 async function getMeta(c){
-  if(backend){try{const s=await backend.ref(CROOT(c)+'/meta').get();const v=s.val();if(v){lsSet('mlu_meta_'+c,v);return v}}catch(e){}}
-  return localMeta(c)||presetMeta(c);
+  let m=null;
+  if(backend){try{const s=await backend.ref(CROOT(c)+'/meta').get();const v=s.val();if(v){lsSet('mlu_meta_'+c,v);m=v}}catch(e){}}
+  if(!m)m=localMeta(c)||presetMeta(c);
+  let list=Object.values(lsGet('mlu_tpts_'+c,{})||{});
+  if(backend){try{const s=await backend.ref(CROOT(c)+'/players').get();Object.values(s.val()||{}).forEach(pl=>{if(pl&&pl.tpts)list=list.concat(Object.values(pl.tpts))})}catch(e){}}
+  return mergeT(m,list);
 }
 async function putMeta(c,meta){lsSet('mlu_meta_'+c,meta);if(backend){try{await backend.ref(CROOT(c)+'/meta').set(meta)}catch(e){toast('Firebase-ке жазылмады: '+e.message)}}}
 async function getPlayers(c){
@@ -2667,13 +2675,13 @@ function mbProblem(){const l=TL.l,m=TL.mb.mode;let pool=m==='A'?l.gA:m==='B'?l.g
 function mbSet(i,sid){const ln=TL.mb.lanes[i];ln.sid=sid||null;ln.n=sid?TL.meta.roster[sid].n:null}
 function mbPickAll(){const r=TL.meta&&TL.meta.roster;if(!r)return;const M=TL.mb;while(M.lanes.length<M.n)M.lanes.push({});M.lanes.length=M.n;const ids=shuf(Object.keys(r).filter(s=>!TL.called.some(c=>c.sid===s)));const all=ids.length>=TL.mb.n?ids:shuf(Object.keys(r));TL.mb.lanes.forEach((ln,i)=>{const sid=all[i%all.length];ln.sid=sid;ln.n=r[sid].n});drawSlide()}
 async function mbAward(i,v){const ln=TL.mb.lanes[i];if(!TL.meta||!TL.meta.roster){toast('Балл журналға түсуі үшін алдымен сынып құрыңыз');return}if(!ln.sid){toast('Алдымен оқушыны таңдаңыз');return}
-  const rec={t:Date.now()+i,p:TL.l.p,v};TL.called.push({sid:ln.sid,n:ln.n,v});
+  const rec={t:Date.now()+i,p:TL.l.p,v,src:'b',sid:ln.sid};TL.called.push({sid:ln.sid,n:ln.n,v});
   TL.meta.pts=TL.meta.pts||{};TL.meta.pts[ln.sid]=TL.meta.pts[ln.sid]||{};TL.meta.pts[ln.sid]['k'+rec.t]=rec;lsSet('mlu_meta_'+tCode,TL.meta);
   if(backend){try{await backend.ref(`${CROOT(tCode)}/meta/pts/${ln.sid}/k${rec.t}`).set(rec)}catch(e){toast('Firebase: '+e.message)}}
   ln.v=v;const pb=document.getElementById('mbp'+i);if(pb)pb.innerHTML=`<span class="pill" style="background:var(--ok2)">✔ ${esc(ln.n)}: ${v} балл журналда</span> <button class="btn ghost" style="padding:4px 8px;font-size:14px" onclick="TL.mb.lanes[${i}].p=null;TL.mb.lanes[${i}].v=null;TL.mb.lanes[${i}].sid=null;drawSlide()">Келесі оқушы →</button>`;toast(`${ln.n}: ${v} балл журналға енгізілді`)}
 async function givePoints(v){
   if(!TL.cur){toast('Алдымен оқушыны таңдаңыз');return}
-  const rec={t:Date.now(),p:TL.l.p,v};TL.called.push({...TL.cur,v});
+  const rec={t:Date.now(),p:TL.l.p,v,src:'b',sid:TL.cur.sid};TL.called.push({...TL.cur,v});
   TL.meta.pts=TL.meta.pts||{};TL.meta.pts[TL.cur.sid]=TL.meta.pts[TL.cur.sid]||{};TL.meta.pts[TL.cur.sid]['k'+rec.t]=rec;
   lsSet('mlu_meta_'+tCode,TL.meta);
   if(backend){try{await backend.ref(`${CROOT(tCode)}/meta/pts/${TL.cur.sid}/k${rec.t}`).set(rec)}catch(e){toast('Firebase: '+e.message)}}
@@ -3076,6 +3084,23 @@ function raceHTML(){if(!TL.race||TL.race.n!==Math.max(2,TL.teams||3))raceInit();
  <div class="row" style="justify-content:center;margin-top:12px">${!R.run&&!R.scored?`<button class="btn gold" style="font-size:22px;padding:12px 30px" onclick="raceStart()">▶ Бастау</button>`:''}${R.run?`<button class="btn ghost" onclick="raceStop()">⏹ Тоқтату</button>`:''}${R.scored?`<button class="btn" style="font-size:20px" onclick="TL.race.r++;TL.race.scored=false;raceRound();drawSlide()">${R.r+1<R.R?'Келесі раунд →':'🏆 Нәтиже'}</button>`:''}</div>`}
 const RCOL=['#e4572e','#4f7bff','#1d9d62','#f2a71b','#7b5cfa'];
 function raceTick(){clearInterval(TL.rt);if(!TL.race||!TL.race.run)return;TL.rt=setInterval(()=>{const e=document.getElementById('rsw');if(!e||!TL.race||!TL.race.run){clearInterval(TL.rt);return}e.textContent='⏱ '+((performance.now()-TL.race.t0)/1000).toFixed(1).replace('.',',')+' с'},100)}
+
+/* ---------- 📱 дәптер баллы: мұғалім телефонынан параллель балл қояды ---------- */
+let noteCode=null,noteMeta=null,noteOff=null;
+async function teacherNote(){const box=document.getElementById('tbody');const cls=[...myClasses.map(c=>({code:c.code,name:c.name})),...PRESET_CLASSES.filter(p=>!myClasses.some(c=>c.code===p.code)).map(p=>({code:p.code,name:p.name}))];
+ if(!noteCode)noteCode=(tCode&&cls.some(c=>c.code===tCode))?tCode:cls[0].code;noteMeta=await getMeta(noteCode);
+ const r=noteMeta&&noteMeta.roster?Object.entries(noteMeta.roster):[];const day=new Date();day.setHours(0,0,0,0);
+ const sums=sid=>{const all=Object.values((noteMeta.pts||{})[sid]||{}).filter(x=>x.t>=day.getTime());return {b:all.filter(x=>x.src!=='n').reduce((a,x)=>a+(+x.v||0),0),n:all.filter(x=>x.src==='n').reduce((a,x)=>a+(+x.v||0),0)}};
+ const sb=nextKTP('alg')>=0?KTP.alg[nextKTP('alg')]:null;
+ box.innerHTML=`<div class="card notec"><div class="row" style="justify-content:space-between"><h2 style="margin:0">📱 Дәптер баллы</h2><select onchange="noteCode=this.value;teacherNote()" style="padding:6px 10px;border-radius:10px;font:800 15px Nunito,system-ui,sans-serif">${cls.map(c=>`<option value="${c.code}" ${c.code===noteCode?'selected':''}>${esc(c.name)}</option>`).join('')}</select></div>
+  <p class="mut" style="margin:6px 0 10px">🖥 тақта – платформа өзі бағалайды · ✍️ дәптер – мұғалім қосады · бәрі бір журналда</p>
+  <div class="nlist">${r.map(([sid,x])=>{const sm=sums(sid);return `<div class="nrow"><div class="nname"><b>${esc(x.n)}</b><span>🖥 ${sm.b} · ✍️ ${sm.n} · Σ <b>${sm.b+sm.n}</b></span></div><div class="nbtns">${[1,2,3].map(v=>`<button onclick="addNote('${sid}',${v})">+${v}</button>`).join('')}<button class="nu" onclick="undoNote('${sid}')">↶</button></div></div>`}).join('')}</div></div>`;
+ if(backend&&!noteOff){const ref=backend.ref(CROOT(noteCode));const h=()=>{if(tTab==='note'&&document.querySelector('.notec'))teacherNote()};ref.child('players').on('child_changed',h);ref.child('meta/pts').on('value',h);noteOff=()=>{ref.child('players').off();ref.child('meta/pts').off()}}}
+async function addNote(sid,v){const rec={t:Date.now(),sid,v,src:'n',p:(TL&&TL.l?TL.l.p:null)};const loc=lsGet('mlu_tpts_'+noteCode,{})||{};loc['n'+rec.t]=rec;lsSet('mlu_tpts_'+noteCode,loc);
+ if(backend&&uid){try{await backend.ref(`${CROOT(noteCode)}/players/${uid}/tpts/n${rec.t}`).set(rec);await backend.ref(`${CROOT(noteCode)}/players/${uid}/role`).set('teacher')}catch(e){toast('Firebase: '+e.message)}}
+ toast(`✍️ +${v} · ${noteMeta.roster[sid].n.split(' ').slice(0,2).join(' ')}`);teacherNote()}
+async function undoNote(sid){const loc=lsGet('mlu_tpts_'+noteCode,{})||{};const ks=Object.keys(loc).filter(k=>loc[k].sid===sid).sort();const k=ks.pop();if(!k){toast('Өшіретін балл жоқ');return}delete loc[k];lsSet('mlu_tpts_'+noteCode,loc);
+ if(backend&&uid){try{await backend.ref(`${CROOT(noteCode)}/players/${uid}/tpts/${k}`).remove()}catch(e){}}if(noteMeta.pts&&noteMeta.pts[sid])delete noteMeta.pts[sid][k];toast('↶ соңғы балл өшірілді');teacherNote()}
 /* ---------- 🏠 бастапқы бет ---------- */
 const ACH=[['🏆','«Жаңашыл ұстаз»','І орын'],['🥇','«Мәңгілік ел ұстаздары»','І орын'],['🎓','«Парасатты педагог»','І дәрежелі диплом'],['⭐','«Үздік педагог»','І дәрежелі диплом'],['🧮','«Алтын сақа» олимпиадасы','шәкірттері: 4 диплом (аудан)'],['📚','Біліктілік курстары','функциялар мен графиктерді оқыту әдістемесі; «Өрлеу», 80 сағ']];
 function renderHome(){view='home';setNav();
