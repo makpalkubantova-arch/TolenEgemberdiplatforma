@@ -302,6 +302,7 @@ table.t th{background:linear-gradient(180deg,#f5f7ff,#eef1fb)}
 @keyframes fxu{from{opacity:0;transform:translate(-50%,-20%) scale(.6)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}to{opacity:0;transform:translate(-50%,-120%) scale(1)}}
 .conf{position:absolute;top:45%;width:12px;height:16px;border-radius:3px;animation:cf 1.2s ease-out forwards}@keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
 .mend.lose{background:linear-gradient(160deg,#141b4d,#5a4a8a)}
+.dj th{min-width:92px;vertical-align:bottom}.djd{font-weight:900}.djt{font-size:10.5px;font-weight:600;color:var(--mut);line-height:1.2;white-space:normal}.djc{text-align:center}.djc b{display:block;font-size:17px}.djc small{font-size:11px;color:var(--mut)}
 </style>
 </head>
 <body>
@@ -2660,12 +2661,34 @@ function showRoster(code){
   md.querySelector('#rX').onclick=()=>exportXLSX([['№','Аты-жөні','PIN'],...rows],`${m.name}_PIN`);
 }
 async function exportXLSX(aoa,name){try{await ensureXLSX();const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=aoa[0].map((_,i)=>({wch:i===1?28:14}));const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Журнал');XLSX.writeFile(wb,name.replace(/[^\wА-Яа-яӘәҒғҚқҢңӨөҰұҮүҺһІі -]/g,'_')+'.xlsx');toast('Excel файлы жүктелді')}catch(e){toast('Бұл терезеде жүктеу жабық – «Көшіру» батырмасын қолданыңыз')}}
+
+/* ---------- 📅 күнделікті журнал: күн · тақырып · балл (Excel) ---------- */
+let jMode='day',jQ=null;
+async function exportSheets(sheets,name){try{await ensureXLSX();const wb=XLSX.utils.book_new();sheets.forEach(([nm,aoa])=>{const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=aoa[0].map((_,i)=>({wch:i===1?30:i===0?4:16}));XLSX.utils.book_append_sheet(wb,ws,nm)});XLSX.writeFile(wb,name.replace(/[^\wА-Яа-яӘәҒғҚқҢңӨөҰұҮүҺһІі -]/g,'_')+'.xlsx');toast('Excel файлы жүктелді')}catch(e){toast('Excel жасалмады: '+e.message)}}
+const dISO=t=>{const d=new Date(t);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+async function dailyJournal(box){const meta=await getMeta(tCode),players=await getPlayers(tCode);if(!meta||!meta.roster){box.textContent='Сынып деректері табылмады.';return}
+ const today=todayISO(),qNow=(KTP.alg.find(r=>r.d>=today)||KTP.alg[KTP.alg.length-1]).q;if(jQ==null)jQ=qNow;
+ const topic={};['alg','geo'].forEach(sb=>KTP[sb].forEach(r=>{if(r.q===jQ){(topic[r.d]=topic[r.d]||[]).push((sb==='alg'?'А: ':'Г: ')+r.t)}}));
+ const recs={};Object.entries(meta.pts||{}).forEach(([sid,o])=>Object.values(o||{}).forEach(x=>{if(!x||!x.t)return;const d=dISO(x.t);(recs[sid]=recs[sid]||{});(recs[sid][d]=recs[sid][d]||{b:0,n:0,g:0});recs[sid][d][x.src==='n'?'n':'b']+=(+x.v||0)}));
+ players.forEach(pl=>{if(!pl||!pl.sid||!pl.hist)return;pl.hist.forEach(h=>{if(h.k!=='mis'&&h.k!=='bjb'&&h.k!=='tjb')return;const d=dISO(h.t);(recs[pl.sid]=recs[pl.sid]||{});(recs[pl.sid][d]=recs[pl.sid][d]||{b:0,n:0,g:0});recs[pl.sid][d].g+=(+h.s||0)})});
+ const qDates=Object.keys(topic).filter(d=>d<=today);const extra=new Set();Object.values(recs).forEach(o=>Object.keys(o).forEach(d=>{const r=KTP.alg.find(x=>x.d>=d)||{};if((r.q||jQ)===jQ&&!topic[d])extra.add(d)}));
+ const dates=[...new Set([...qDates,...extra])].sort();
+ const ros=Object.entries(meta.roster);const cell=(sid,d,k)=>{const r=recs[sid]&&recs[sid][d];if(!r)return '';const v=k==='all'?r.b+r.n:r[k];return v||(k==='all'&&(r.b||r.n)===0&&r.g?'':'')||''};
+ const hdr=d=>`${fmtD(d)}${topic[d]?' · '+topic[d].join(' / '):''}`;
+ const mk=k=>[['№','Аты-жөні',...dates.map(hdr),'Σ'],...ros.map(([sid,r],i)=>{const vs=dates.map(d=>{const c=recs[sid]&&recs[sid][d];return c?(k==='all'?c.b+c.n:c[k]):''});return [i+1,r.n,...vs,vs.reduce((a,v)=>a+(+v||0),0)]})];
+ const A=mk('all');
+ box.innerHTML=`<div class="row" style="margin:6px 0 10px;gap:6px">${[1,2,3,4].map(q=>`<button class="btn ${jQ===q?'':'ghost'}" style="padding:5px 12px" onclick="jQ=${q};teacherJournal()">${q}-тоқсан</button>`).join('')}<span style="flex:1"></span><button class="btn" id="jdX">📥 Excel (күн · тақырып · балл)</button></div>
+  <div class="mut" style="margin-bottom:8px">🖥 тақта (платформа) + ✍️ дәптер (мұғалім) = күнделікті балл · 🎮 ойын – жеке парақта</div>
+  ${dates.length?`<div style="overflow:auto"><table class="t jt dj"><tr><th>№</th><th>Аты-жөні</th>${dates.map(d=>`<th title="${esc(hdr(d))}"><div class="djd">${fmtD(d)}</div><div class="djt">${esc((topic[d]||['—']).join(' / ')).slice(0,60)}</div></th>`).join('')}<th>Σ</th></tr>
+   ${ros.map(([sid,r],i)=>`<tr><td>${i+1}</td><td style="white-space:nowrap"><b>${esc(r.n)}</b></td>${dates.map(d=>{const c=recs[sid]&&recs[sid][d];return `<td class="djc">${c&&(c.b||c.n)?`<b>${c.b+c.n}</b><small>${c.b?'🖥'+c.b:''}${c.n?' ✍️'+c.n:''}</small>`:c&&c.g?`<small>🎮${c.g}</small>`:''}</td>`}).join('')}<td><b>${A[i+1][A[i+1].length-1]}</b></td></tr>`).join('')}</table></div>`:'<p class="mut">Бұл тоқсанда әзірге сабақ күндері жоқ.</p>'}`;
+ document.getElementById('jdX').onclick=()=>exportSheets([['Күнделікті балл',A],['Тақта',mk('b')],['Дәптер',mk('n')],['Ойын',mk('g')]],`${meta.name}_${jQ}-тоқсан_күнделікті_журнал`)}
 /* ---------- МҰҒАЛІМ: ЖУРНАЛ ---------- */
 async function teacherJournal(){
   const box=document.getElementById('tbody');
-  if(!myClasses.length){box.innerHTML=`<div class="card"><h2>📒 Журнал</h2><p class="mut">Алдымен «👥 Сыныптар» бөлімінде сынып құрыңыз.</p><button class="btn" onclick="tTab='cls';renderTeacher()">👥 Сынып құру</button></div>`;return}
+  if(!myClasses.length){box.innerHTML=`<div class="card"><h2>📒 Журнал</h2><button class="btn gold" onclick="createPreset(0).then(()=>{tTab='journal';renderTeacher()})">⚡ 7 «Ә» сыныбын құру</button></div>`;return}
   if(!tCode)tCode=myClasses[0].code;
-  box.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">📒 Электрондық журнал</h2>${classPicker('teacherJournal')}</div><div id="jbox" class="mut" style="margin-top:10px">Жүктелуде…</div></div>`;
+  box.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">📒 Электрондық журнал</h2><div class="row"><div class="steps" style="margin:0">${[['day','📅 Күнделікті'],['sum','📊 Жиынтық']].map(([k,t])=>`<button class="${jMode===k?'on':''}" onclick="jMode='${k}';teacherJournal()">${t}</button>`).join('')}</div>${classPicker('teacherJournal')}</div></div><div id="jbox" class="mut" style="margin-top:10px">Жүктелуде…</div></div>`;
+  if(jMode==='day'){await dailyJournal(document.getElementById('jbox'));return}
   const meta=await getMeta(tCode),players=await getPlayers(tCode);if(!meta){document.getElementById('jbox').textContent='Сынып деректері табылмады.';return}
   const nA=L.filter(l=>l.subj==='alg').length,nG=L.filter(l=>l.subj==='geo').length;
   const rows=Object.entries(meta.roster).map(([sid,r],i)=>{
