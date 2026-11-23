@@ -303,6 +303,7 @@ table.t th{background:linear-gradient(180deg,#f5f7ff,#eef1fb)}
 .conf{position:absolute;top:45%;width:12px;height:16px;border-radius:3px;animation:cf 1.2s ease-out forwards}@keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
 .mend.lose{background:linear-gradient(160deg,#141b4d,#5a4a8a)}
 .dj th{min-width:92px;vertical-align:bottom}.djd{font-weight:900}.djt{font-size:10.5px;font-weight:600;color:var(--mut);line-height:1.2;white-space:normal}.djc{text-align:center}.djc b{display:block;font-size:17px}.djc small{font-size:11px;color:var(--mut)}
+.obtn{font-weight:900}.obtn.big{font-size:18px;padding:12px 20px}.btn.ok.obtn{box-shadow:0 4px 0 #147447}
 </style>
 </head>
 <body>
@@ -1823,10 +1824,11 @@ function renderRating(){
 let tSubj='alg';
 const subjTabs=(fn)=>`<div class="steps" style="margin:0 0 12px">${[['alg','🔢 Алгебра 7'],['geo','📐 Геометрия 7']].map(([k,n])=>`<button class="${tSubj===k?'on':''}" style="font-size:16px;padding:10px 18px" onclick="tSubj='${k}';${fn}()">${n}</button>`).join('')}</div>`;
 function teacherLessons(){
+  if(!tCode&&myClasses.length)tCode=myClasses[0].code;if(!window._tol&&tCode){window._tol=1;teacherOpenLoad().then(()=>{if(view==='teacher'&&tTab==='lesson'&&!TL)teacherLessons()})}
   const sb=tSubj==='geo'?'geo':'alg',nx=nextKTP(sb),r=nx>=0?KTP[sb][nx]:null,today=r&&r.d===todayISO(),ls=r?r.ps.map(p=>p===200?REV6:L.find(l=>l.p===p)).filter(Boolean):[],V=ls[0]?VIS[visFor(ls[0])]:null;
-  let h=`<div class="todayhero"><div style="flex:1"><div class="th-tag">${today?'📌 Бүгінгі сабақ':'⏭ Келесі сабақ'} · ${r?fmtD(r.d)+' · №'+r.n:''}</div><div class="th-t">${r?esc(r.t):'—'}</div><div class="th-chips">${ls.map(l=>`<span>📖 § ${l.num}</span>`).join('')}${r&&kmjOf(sb,r)?'<span>📝 ҚМЖ</span>':''}<span>🎬 3D</span><span>🎲 Кездейсоқ</span><span>🎮 Жарыс</span></div></div>${r?`<button class="btn gold th-go" onclick="teachLesson(ktpLesson('${sb}',${nx}))">▶ Тақтада бастау</button>`:''}</div>
+  let h=`<div class="todayhero"><div style="flex:1"><div class="th-tag">${today?'📌 Бүгінгі сабақ':'⏭ Келесі сабақ'} · ${r?fmtD(r.d)+' · №'+r.n:''}</div><div class="th-t">${r?esc(r.t):'—'}</div><div class="th-chips">${ls.map(l=>`<span>📖 § ${l.num}</span>`).join('')}${r&&kmjOf(sb,r)?'<span>📝 ҚМЖ</span>':''}<span>🎬 3D</span><span>🎲 Кездейсоқ</span><span>🎮 Жарыс</span></div></div>${r?`<div style="display:flex;flex-direction:column;gap:10px"><button class="btn gold th-go" onclick="teachLesson(ktpLesson('${sb}',${nx}))">▶ Тақтада бастау</button>${openBtnHTML(sb,nx,true)}</div>`:''}</div>
   <div class="card">${subjTabs('teacherLessons')}<div class="row" style="justify-content:space-between"><h2 style="margin:0">${tSubj==='geo'?'📐 Геометрия 7':'🔢 Алгебра 7'} · барлық тақырып</h2><button class="btn ghost" onclick="tArea='docs';tTab='ktp';show('teacher')">📅 ҚТЖ бойынша →</button></div></div>`;
-  SECTIONS.filter(sec=>sec.subj===tSubj).forEach(sec=>{h+=`<div class="section"><div class="shead"><div class="snum" style="background:${sec.color}">${sec.r}</div><h2 style="margin:0">${sec.title}</h2></div><div class="path">${secLessons(sec.n).map(l=>`<button class="node" onclick="teachLesson(${l.p})"><div class="pn">§ ${l.num}</div><div class="pt">${l.t}</div><div class="st" style="color:var(--pri);font-size:12px;font-weight:800">▶ Сабақты бастау</div></button>`).join('')}</div></div>`});
+  SECTIONS.filter(sec=>sec.subj===tSubj).forEach(sec=>{h+=`<div class="section"><div class="shead"><div class="snum" style="background:${sec.color}">${sec.r}</div><h2 style="margin:0">${sec.title}</h2></div><div class="path">${secLessons(sec.n).map(l=>`<button class="node" onclick="teachLesson(${l.p})"><div class="pn">§ ${l.num} ${KTP_OPEN.has(l.p)?'<span title="Оқушыларға ашық">🔓</span>':'<span title="Оқушыларға жабық" style="opacity:.45">🔒</span>'}</div><div class="pt">${l.t}</div><div class="st" style="color:var(--pri);font-size:12px;font-weight:800">▶ Сабақты бастау</div></button>`).join('')}</div></div>`});
   document.getElementById('tbody').innerHTML=h;
 }
 function teacherMonitor(){
@@ -1984,7 +1986,7 @@ function drawSlide(){
     body=`<h1>Үй тапсырмасы</h1><div class="card" style="font-size:20px"><p>1. Оқулық: <b>§ ${l.num}</b> оқу, ережесін жаттау.</p><p>2. Платформа: <b>§ ${l.num} → Жаттығу</b> бөлімінде кемінде <b>15 есеп</b> шығару.</p><p>3. Платформа: <b>§ ${l.num} → Тексеру</b> – 4/5-тен жоғары нәтиже алып, келесі параграфты ашу (+50 XP).</p><p class="mut" style="font-size:16px">Нәтижелер «Сынып мониторингі» бөлімінде автоматты көрінеді.</p></div>
      <div class="row"><button class="btn ok" onclick="exitLesson()">✔ Сабақты аяқтау</button>${L[L.indexOf(l)+1]?`<button class="btn ghost" onclick="teachLesson(${L[L.indexOf(l)+1].p})">Келесі сабақ: § ${L[L.indexOf(l)+1].num} →</button>`:''}</div>`;
   }
-  app().innerHTML=`<div class="card" style="padding:14px 18px"><div class="row" style="justify-content:space-between"><div><span class="pill" style="background:${sec.color};color:#fff">§ ${l.num}. ${l.t}</span></div><div class="row"><button class="btn ghost" onclick="ink()" title="Тақтаның үстінен қаламмен сызу">✏️ Сызу</button><button class="btn ghost" onclick="closeInk();exitLesson()">✕ Шығу</button></div></div>
+  app().innerHTML=`<div class="card" style="padding:14px 18px"><div class="row" style="justify-content:space-between"><div><span class="pill" style="background:${sec.color};color:#fff">§ ${l.num}. ${l.t}</span></div><div class="row">${(()=>{const k=ktpIdxForLesson(l);return k?openBtnHTML(k[0],k[1]):''})()}<button class="btn ghost" onclick="ink()" title="Тақтаның үстінен қаламмен сызу">✏️ Сызу</button><button class="btn ghost" onclick="closeInk();exitLesson()">✕ Шығу</button></div></div>
    <div class="dots" style="margin:12px 0 0;flex-wrap:wrap">${slides.map((s,j)=>`<i title="${s.n}" style="cursor:pointer;width:auto;flex:1;min-width:24px;height:10px" class="${j<i?'ok':j===i?'cur':''}" onclick="stopTimer();TL.i=${j};drawSlide()"></i>`).join('')}</div>
    <div class="row" style="justify-content:space-between;margin-top:6px"><div class="mut" style="font-weight:800">${i+1}/${slides.length} · <span class="pill" style="background:${sl.st==='Басы'?'#e3f5ec':sl.st==='Ортасы'?'#e7ecfd':'#fdefe3'}">Сабақтың ${sl.st.toLowerCase()}</span> ${sl.n} · <b>${sl.m?sl.m+' мин':'қосымша'}</b></div><span class="pill" id="lclock" style="font-size:15px">🕒 0:00 / 45:00</span></div></div>
    <div class="card board" style="min-height:420px">${body}</div>
@@ -2786,11 +2788,15 @@ async function syncOpen(){                          // оқушы: сыныпт�
   if(backend&&!openOff){const ref=backend.ref(CROOT(S.code)+'/meta/open');const h=sn=>{const before=Object.keys(OPENK).length;applyOpen(sn.val());if(Object.keys(OPENK).length>before)toast('🔓 Мұғалім жаңа тапсырмаларды ашты!');if(['ktp','map'].includes(view))show(view)};ref.on('value',h);openOff=()=>ref.off('value',h)}
 }
 async function setOpen(subj,idx,on){              // мұғалім: рұқсат беру / жабу
-  if(!tCode){toast('Алдымен «👥 Сыныптар» бөлімінде сынып құрыңыз');return}
+  if(!tCode&&myClasses.length)tCode=myClasses[0].code;
+  if(!tCode){const c=PRESET_CLASSES[0];await createClass(c.name,c.names,{code:c.code,pin:c.pin})}
   const m=await getMeta(tCode);if(!m){toast('Сынып табылмады');return}m.open=m.open||{};const k=kKey(subj,KTP[subj][idx]);
   if(on)m.open[k]=Date.now();else delete m.open[k];await putMeta(tCode,m);applyOpen(m.open);
   toast(on?'🔓 Тапсырмалар оқушыларға ашылды':'🔒 Тапсырмалар жабылды');
 }
+/* көз алдындағы «🔓 Ойынды ашу» батырмасы */
+function ktpIdxForLesson(l){if(l.ktp)return [l.ktpSubj,l.ktpIdx];const sb=l.subj==='geo'?'geo':'alg',t=todayISO();let ids=KTP[sb].map((r,i)=>r.ps.includes(l.p)&&r.k==='les'?i:-1).filter(i=>i>=0);if(!ids.length)ids=KTP[sb].map((r,i)=>r.ps.includes(l.p)?i:-1).filter(i=>i>=0);if(!ids.length)return null;const past=ids.filter(i=>KTP[sb][i].d<=t);return [sb,past.length?past[past.length-1]:ids[0]]}
+function openBtnHTML(sb,idx,big){if(sb==null)return '';const on=!!OPENK[kKey(sb,KTP[sb][idx])];return `<button class="btn ${on?'ok':'gold'} obtn ${big?'big':''}" onclick="setOpen('${sb}',${idx},${!on}).then(()=>{if(TL)drawSlide();else renderTeacher()})" title="${on?'Оқушыларға ашық – басса жабылады':'Оқушылардың ойынында осы тақырыпты ашу'}">${on?'🔓 Ойын ашық':'🔒 Ойынды ашу'}</button>`}
 async function teacherOpenLoad(){if(teacher&&tCode){const m=await getMeta(tCode);applyOpen(m&&m.open)}}
 function nextKTP(subj){const t=todayISO();return KTP[subj].findIndex(r=>r.d>=t)}
 /* ---------- ҚТЖ сабағынан құрама сабақ ---------- */
