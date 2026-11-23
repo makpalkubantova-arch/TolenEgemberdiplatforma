@@ -245,6 +245,17 @@ table.t th{background:linear-gradient(180deg,#f5f7ff,#eef1fb)}
 @media(max-width:800px){.panels,.achg{grid-template-columns:1fr}.homehero{flex-direction:column;padding:24px}.hh-logo{font-size:40px}.qgrid{grid-template-columns:1fr}}
 .todayhero{display:flex;align-items:center;gap:20px;padding:26px 30px;border-radius:26px;color:#fff;background:linear-gradient(120deg,#141b4d,#4057e3 60%,#8d4fe0);box-shadow:0 14px 34px rgba(50,50,160,.28);margin-bottom:16px}
 .th-tag{font-weight:900;color:#ffd54a}.th-t{font:900 30px Nunito,system-ui,sans-serif;margin:6px 0 12px}.th-chips{display:flex;gap:8px;flex-wrap:wrap}.th-chips span{background:rgba(255,255,255,.16);padding:5px 12px;border-radius:999px;font-weight:800;font-size:14px}.th-go{font-size:20px;padding:16px 26px}
+
+.gatewrap{max-width:980px;margin:10px auto;padding:26px;border-radius:28px;background:linear-gradient(160deg,#1b2266,#4057e3 60%,#8d4fe0);color:#fff;box-shadow:0 18px 40px rgba(50,50,160,.3);min-height:520px}
+.gtitle{font:900 34px Nunito,system-ui,sans-serif;text-align:center;margin:6px 0 20px;display:flex;align-items:center;justify-content:center;gap:12px}
+.gback{border:0;background:rgba(255,255,255,.2);color:#fff;width:46px;height:46px;border-radius:50%;font:900 26px Nunito,system-ui,sans-serif;cursor:pointer}
+.gclasses{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}.gclass{border:0;cursor:pointer;width:260px;padding:26px;border-radius:26px;background:#fff;color:#141b4d;display:flex;flex-direction:column;gap:6px;align-items:center;font:800 16px Nunito,system-ui,sans-serif;box-shadow:0 10px 0 #c7cdf5;transition:transform .15s}.gclass:hover{transform:translateY(-5px)}.gcn{font:900 52px Nunito,system-ui,sans-serif;color:#4057e3}
+.gnames{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}.gname{border:0;cursor:pointer;background:rgba(255,255,255,.95);color:#141b4d;border-radius:20px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:Nunito,system-ui,sans-serif;box-shadow:0 6px 0 rgba(0,0,0,.15);transition:transform .15s}.gname:hover{transform:translateY(-4px) rotate(-1deg)}.gname b{font-size:15px;text-align:center;line-height:1.2}
+.gav{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff;font:900 22px Nunito,system-ui,sans-serif;box-shadow:0 0 0 4px #ffd54a}.gav.big{width:96px;height:96px;font-size:36px;margin:0 auto}
+.gpinbox{max-width:360px;margin:0 auto;text-align:center;display:flex;flex-direction:column;gap:14px}.gname2{font:800 18px Nunito,system-ui,sans-serif}
+.gdots{display:flex;gap:16px;justify-content:center}.gdots i{width:22px;height:22px;border-radius:50%;border:3px solid #fff}.gdots i.on{background:#ffd54a;border-color:#ffd54a}.gdots.shake{animation:shk .4s}
+@keyframes shk{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.gpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.gpad button{border:0;cursor:pointer;height:64px;border-radius:18px;background:rgba(255,255,255,.18);color:#fff;font:900 28px Nunito,system-ui,sans-serif}.gpad button:active{transform:scale(.95)}.gpad button.ok{background:#ffd54a;color:#141b4d}
 </style>
 </head>
 <body>
@@ -1498,7 +1509,7 @@ let view='map', cur=null, step=0;
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>show(b.dataset.v));
 function show(v){
   if(v==='home'){renderHome();return}
-  if(!S&&v!=='model'&&v!=='teacher'&&!(teacher&&v==='ktp')){renderLogin();return}
+  if(!S&&v!=='model'&&v!=='teacher'&&!(teacher&&v==='ktp')){gate={step:0};renderStudentGate();return}
   view=v; document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   ({map:renderMap,rating:renderRating,profile:renderProfile,model:renderModel,teacher:renderTeacher,growth:renderGrowth,ktp:renderKTP})[v]();
   setNav();window.scrollTo(0,0);
@@ -1540,7 +1551,7 @@ function renderLogin(){
    <div id="lform" style="text-align:left;display:grid;gap:10px;margin:12px 0"></div></div>`;
   const f=document.getElementById('lform');
   if(loginMode==='free'){
-    f.innerHTML=`<label class="mut" style="font-weight:800">Аты-жөнің<input class="txt" id="inName" placeholder="Мысалы: Айбек Сәрсен" maxlength="40"></label><label class="mut" style="font-weight:800">Сыныбың<input class="txt" id="inCls" placeholder="Мысалы: 7 А" maxlength="10"></label><button class="btn" id="go" style="width:100%">Бастау →</button><p class="mut" style="font-size:13px;text-align:center">Жеке режимде нәтижең осы құрылғыда сақталады және жалпы рейтингке жіберіледі.</p>`;
+    f.innerHTML=`<label class="mut" style="font-weight:800">Аты-жөнің<input class="txt" id="inName" placeholder="Аты-жөніңді жаз" maxlength="40"></label><label class="mut" style="font-weight:800">Сыныбың<input class="txt" id="inCls" placeholder="Мысалы: 7 А" maxlength="10"></label><button class="btn" id="go" style="width:100%">Бастау →</button><p class="mut" style="font-size:13px;text-align:center">Жеке режимде нәтижең осы құрылғыда сақталады және жалпы рейтингке жіберіледі.</p>`;
     document.getElementById('go').onclick=()=>{const n=document.getElementById('inName').value.trim(),c=document.getElementById('inCls').value.trim();if(n.length<2||!c){toast('Аты-жөніңді және сыныбыңды жаз');return}S=blank(n,c);save();sync();show('map')};
     return;
   }
@@ -2509,9 +2520,10 @@ const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 let myClasses=lsGet('mlu_tclasses',[]);           // мұғалімнің сыныптары [{code,name}]
 let tCode=(myClasses[0]||{}).code||'';           // таңдалған сынып
 const localMeta=c=>lsGet('mlu_meta_'+c,null);
+function presetMeta(c){const P=(typeof PRESET_CLASSES!=='undefined'?PRESET_CLASSES:[]).find(x=>x.code===c);if(!P)return null;const roster={};P.names.forEach((n,i)=>roster['s'+(i+1)]={n,h:fnv(c+':'+P.pin)});return {name:P.name,roster,pts:{},preset:true}}
 async function getMeta(c){
   if(backend){try{const s=await backend.ref(CROOT(c)+'/meta').get();const v=s.val();if(v){lsSet('mlu_meta_'+c,v);return v}}catch(e){}}
-  return localMeta(c);
+  return localMeta(c)||presetMeta(c);
 }
 async function putMeta(c,meta){lsSet('mlu_meta_'+c,meta);if(backend){try{await backend.ref(CROOT(c)+'/meta').set(meta)}catch(e){toast('Firebase-ке жазылмады: '+e.message)}}}
 async function getPlayers(c){
@@ -2527,12 +2539,12 @@ async function readRosterFile(file){
   return parseNames(await file.text());
 }
 let _xlsxP=null;function ensureXLSX(){if(window.XLSX)return Promise.resolve();_xlsxP=_xlsxP||loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');return _xlsxP}
-async function createClass(name,names){
-  const code=genCode(),roster={},pins={};
-  names.forEach((n,i)=>{const sid='s'+(i+1),pin=genPin();roster[sid]={n,h:fnv(code+':'+pin)};pins[sid]=pin});
+async function createClass(name,names,opt={}){
+  const code=opt.code||genCode(),roster={},pins={};
+  names.forEach((n,i)=>{const sid='s'+(i+1),pin=opt.pin||genPin();roster[sid]={n,h:fnv(code+':'+pin)};pins[sid]=pin});
   const meta={host:uid||'local',name,created:Date.now(),roster,pts:{}};
   await putMeta(code,meta);lsSet('mlu_pins_'+code,pins);
-  myClasses.push({code,name});lsSet('mlu_tclasses',myClasses);tCode=code;return code;
+  if(!myClasses.some(c=>c.code===code))myClasses.push({code,name});lsSet('mlu_tclasses',myClasses);tCode=code;return code;
 }
 /* ---------- оқушының сынып кодымен кіруі ---------- */
 async function classLogin(code,sid,pin){
@@ -2574,8 +2586,8 @@ async function renderGrowth(){
 /* ---------- МҰҒАЛІМ: СЫНЫПТАР ---------- */
 function classPicker(fn){return myClasses.length?`<label class="mut" style="font-weight:800">Сынып: <select onchange="tCode=this.value;${fn}()" style="padding:6px 10px;border-radius:10px;font:700 14px Nunito">${myClasses.map(c=>`<option value="${c.code}" ${c.code===tCode?'selected':''}>${esc(c.name)} (${c.code})</option>`).join('')}</select></label>`:''}
 /* ---------- дайын тізім: 7 «Ә» («Ащыбұлақ» мектебі) – тек аты-жөндер ---------- */
-const PRESET_CLASSES=[{name:'7 «Ә»',names:["Амангелді Ұлданай Абдусейтқызы", "Абсаттар Аружан Алиасқарқызы", "Абдигаппар Бекнур Абдуманапұлы", "Абілхайыр Елдана Абайқызы", "Амангелді Ернар Дауіржанұлы", "Алпомиш Абылайхан Абдуллаұлы", "Кунис Бақдаулет Уралбекұлы", "Мырзагелдиева Айлаз Ерланқизи", "Мавлян Бейбарыс Еркінұлы", "Мендеш Бекнұр Ерболатұлы", "Наурызбай Аида Бахқызы", "Пердебай Нұрсұлтан Сәкенұлы", "Сейтжаппар Жансезім Байдаулетқызы", "Сәуірбек Кәусар Сәкенқызы", "Сейтмаханбетов Нурадил Акимбекугли", "Сансызбай Дидар Есімханұлы", "Сайдикарим Жанасыл Қанатұлы", "Сатыбалды Мырзабек Манасұлы", "Тасполат Ерсайын Дінмухаммед ұлы", "Узбекали Ернар Нуралиугли"]}];
-async function createPreset(i){const c=PRESET_CLASSES[i];if(myClasses.some(x=>x.name===c.name)&&!confirm(c.name+' сыныбы бұрын құрылған. Жаңадан тағы құру керек пе?'))return;const code=await createClass(c.name,c.names);toast('✅ '+c.name+' сыныбы құрылды · код: '+code);showRoster(code)}
+const PRESET_CLASSES=[{name:'7 «Ә»',code:'ASH7A',pin:'0000',school:'«Ащыбұлақ» мектебі',names:["Амангелді Ұлданай Абдусейтқызы", "Абсаттар Аружан Алиасқарқызы", "Абдигаппар Бекнур Абдуманапұлы", "Абілхайыр Елдана Абайқызы", "Амангелді Ернар Дауіржанұлы", "Алпомиш Абылайхан Абдуллаұлы", "Кунис Бақдаулет Уралбекұлы", "Мырзагелдиева Айлаз Ерланқизи", "Мавлян Бейбарыс Еркінұлы", "Мендеш Бекнұр Ерболатұлы", "Наурызбай Аида Бахқызы", "Пердебай Нұрсұлтан Сәкенұлы", "Сейтжаппар Жансезім Байдаулетқызы", "Сәуірбек Кәусар Сәкенқызы", "Сейтмаханбетов Нурадил Акимбекугли", "Сансызбай Дидар Есімханұлы", "Сайдикарим Жанасыл Қанатұлы", "Сатыбалды Мырзабек Манасұлы", "Тасполат Ерсайын Дінмухаммед ұлы", "Узбекали Ернар Нуралиугли"]}];
+async function createPreset(i){const c=PRESET_CLASSES[i];if(myClasses.some(x=>x.code===c.code)&&!confirm(c.name+' сыныбы бұрын құрылған. Тізімді жаңарту керек пе? (балдар сақталады)'))return;const old=await getMeta(c.code);const code=await createClass(c.name,c.names,{code:c.code,pin:c.pin});if(old&&old.pts){const m=localMeta(code);m.pts=old.pts;await putMeta(code,m)}toast('✅ '+c.name+' сыныбы құрылды · код: '+code);showRoster(code)}
 async function teacherClasses(){
   const box=document.getElementById('tbody');
   let list='';for(const c of myClasses){const m=localMeta(c.code);list+=`<div class="rrow"><div style="flex:1"><b style="font-size:18px">${esc(c.name)}</b> <span class="pill">Код: <b style="letter-spacing:2px">${c.code}</b></span> <span class="mut">${m?Object.keys(m.roster||{}).length:'?'} оқушы</span></div><button class="btn ghost" onclick="tCode='${c.code}';showRoster('${c.code}')">👥 Тізім мен PIN</button><button class="btn ghost" onclick="tCode='${c.code}';tTab='journal';renderTeacher()">📒 Журнал</button></div>`}
@@ -2583,7 +2595,7 @@ async function teacherClasses(){
    <div class="card"><h2>👥 Менің сыныптарым</h2>${list||'<p class="mut">Әзірге сынып жоқ. Жоғарыдағы дайын тізімнен немесе төменде өз тізіміңізбен сынып құрыңыз.</p>'}</div>
    <div class="card"><h2>➕ Жаңа сынып құру</h2><div class="grid3" style="align-items:start"><div><label class="mut" style="font-weight:800">Сынып атауы<input class="txt" id="cName" placeholder="Мысалы: 7 «А»"></label>
     <label class="mut" style="font-weight:800;display:block;margin-top:10px">Тізімді файлдан жүктеу (Word, Excel, CSV, TXT)<input type="file" id="cFile" accept=".xlsx,.xls,.csv,.txt,.docx" style="display:block;margin-top:6px"></label></div>
-    <div style="grid-column:span 2"><label class="mut" style="font-weight:800">Оқушылар тізімі (әр жолға бір оқушы)<textarea id="cNames" rows="9" class="txt" style="font-size:15px" placeholder="Әлібек Айбек&#10;Сәрсен Аружан&#10;…"></textarea></label></div></div>
+    <div style="grid-column:span 2"><label class="mut" style="font-weight:800">Оқушылар тізімі (әр жолға бір оқушы)<textarea id="cNames" rows="9" class="txt" style="font-size:15px" placeholder="Әр жолға бір оқушының аты-жөні"></textarea></label></div></div>
     <div class="row" style="margin-top:10px"><button class="btn" id="cMake">Сыныпты құру</button><span class="mut" id="cInfo"></span></div>
     <p class="mut" style="font-size:13px">Әр оқушыға 4 таңбалы жеке PIN-код беріледі. Оқушы «Сынып кодымен кіру» арқылы сынып кодын енгізіп, өз атын таңдап, PIN-ін жазады. Сынып осы құрылғыдағы мұғалім браузеріне байланады – сыныпты басқаруды осы браузерден жүргізіңіз.</p></div>`;
   const ta=document.getElementById('cNames'),info=document.getElementById('cInfo');
@@ -2638,7 +2650,7 @@ function studentCard(sid){
 /* ---------- САБАҚТА: ТАҚТАҒА ШАҚЫРУ ---------- */
 async function boardSlideInit(){
   if(!tCode&&myClasses.length)tCode=myClasses[0].code;
-  if(!tCode&&typeof PRESET_CLASSES!=='undefined'){const c=PRESET_CLASSES[0];await createClass(c.name,c.names);toast('✅ '+c.name+' сыныбының тізімі жүктелді – кездейсоқ таңдауға дайын')}
+  if(!tCode&&typeof PRESET_CLASSES!=='undefined'){const c=PRESET_CLASSES[0];await createClass(c.name,c.names,{code:c.code,pin:c.pin});toast('✅ '+c.name+' сыныбының тізімі жүктелді – кездейсоқ таңдауға дайын')}
   TL.meta=tCode?await getMeta(tCode):null;TL.called=TL.called||[];if(!TL.bprob)TL.bprob=plainOf([TL.l.g,...TL.l.gB]);drawSlide();
 }
 function pickStudent(){const r=TL.meta&&TL.meta.roster;if(!r)return;const ids=Object.keys(r).filter(s=>!TL.called.some(c=>c.sid===s));const pool=ids.length?ids:Object.keys(r);
@@ -3020,11 +3032,27 @@ function quizHTML(l){const Q=TL.qz;if(!TL.teams)TL.teams=2;
   <div class="row" style="justify-content:center;margin-top:12px">${Q.rev?'':`<button class="btn gold" onclick="TL.qz.rev=1;clearInterval(TL.qt);drawSlide()">Жауап</button>`}${Array.from({length:TL.teams},(_,t)=>`<button class="btn" style="background:${TEAMCOL[t]};box-shadow:none" onclick="TL.scores[${t}]++;TL.qz.rev=1;clearInterval(TL.qt);drawSlide()">${t+1}-топ · ${TL.scores[t]}</button>`).join('')}<button class="btn ghost" onclick="clearInterval(TL.qt);TL.qz.i++;TL.qz.p=null;TL.qz.rev=0;drawSlide()">Келесі →</button></div>
   <div class="row" style="justify-content:center;margin-top:6px">${[2,3,4].map(n=>`<button class="btn ${TL.teams===n?'':'ghost'}" style="padding:3px 10px;font-size:13px" onclick="TL.teams=${n};drawSlide()">${n} топ</button>`).join('')}</div>`}
 function quizTimer(){clearInterval(TL.qt);if(!TL.qz||TL.qz.rev||TL.qz.i>=TL.qz.n)return;let s=20;const tick=()=>{const b=document.getElementById('qbar'),e=document.getElementById('qsec');if(!b){clearInterval(TL.qt);return}b.style.width=(s/20*100)+'%';e.textContent=s;if(s<=0){clearInterval(TL.qt);TL.qz.rev=1;drawSlide();return}s--};tick();TL.qt=setInterval(tick,1000)}
+
+/* ---------- 🎒 оқушы панелі: сынып → аты-жөні → пароль (ойын түрінде) ---------- */
+let gate={step:0};
+function renderStudentGate(){view='gate';setNav();const P=PRESET_CLASSES,g=gate;
+ let h='';
+ if(g.step===0){h=`<div class="gtitle">🎒 Сыныбыңды таңда</div><div class="gclasses">${P.map((c,i)=>`<button class="gclass" onclick="gate={step:1,ci:${i}};renderStudentGate()"><span class="gcn">${esc(c.name)}</span><span>${c.school}</span><span>👥 ${c.names.length}</span></button>`).join('')}</div>
+   <div class="row" style="justify-content:center;margin-top:16px"><button class="btn ghost" onclick="loginMode='code';renderLogin()">🔑 Басқа сынып коды</button><button class="btn ghost" onclick="loginMode='free';renderLogin()">✍️ Сыныпсыз кіру</button></div>`}
+ else if(g.step===1){const c=P[g.ci];h=`<div class="gtitle"><button class="gback" onclick="gate={step:0};renderStudentGate()">‹</button>${esc(c.name)} · атыңды таңда</div><div class="gnames">${c.names.map((n,i)=>{const col=AVC[i%AVC.length];return `<button class="gname" onclick="gate={step:2,ci:${g.ci},si:${i},pin:''};renderStudentGate()"><span class="gav" style="background:${col}">${esc(n.trim()[0])}${esc((n.split(' ')[1]||' ')[0])}</span><b>${esc(n.split(' ').slice(0,2).join(' '))}</b></button>`}).join('')}</div>`}
+ else{const c=P[g.ci],n=c.names[g.si];h=`<div class="gtitle"><button class="gback" onclick="gate={step:1,ci:${g.ci}};renderStudentGate()">‹</button>Сәлем, ${esc(n.split(' ')[1]||n)}! 👋</div>
+   <div class="gpinbox"><div class="gav big" style="background:${AVC[g.si%AVC.length]}">${esc(n.trim()[0])}${esc((n.split(' ')[1]||' ')[0])}</div><div class="gname2">${esc(n)}</div><div class="gdots ${g.err?'shake':''}">${[0,1,2,3].map(k=>`<i class="${k<g.pin.length?'on':''}"></i>`).join('')}</div>
+   <div class="gpad">${[1,2,3,4,5,6,7,8,9,'⌫',0,'✓'].map(k=>`<button onclick="gateKey('${k}')" class="${k==='✓'?'ok':''}">${k}</button>`).join('')}</div><div class="mut">Пароліңді енгіз</div></div>`}
+ app().innerHTML=`<div class="gatewrap">${h}</div>`;
+ document.onkeydown=e=>{if(view!=='gate'||gate.step!==2)return;if(/^\d$/.test(e.key))gateKey(e.key);if(e.key==='Backspace')gateKey('⌫');if(e.key==='Enter')gateKey('✓')}}
+async function gateKey(k){const g=gate;g.err=0;if(k==='⌫')g.pin=g.pin.slice(0,-1);else if(k==='✓'||g.pin.length>=4){}else g.pin+=k;
+ if((k==='✓'||g.pin.length===4)&&g.pin.length===4){const c=PRESET_CLASSES[g.ci];const err=await classLogin(c.code,'s'+(g.si+1),g.pin);if(err){g.pin='';g.err=1;renderStudentGate();toast('🔒 '+err);return}document.onkeydown=null;renderMe();toast('🎉 Қош келдің, '+S.name.split(' ')[1]+'!');show('map');return}
+ renderStudentGate()}
 /* ---------- 🏠 бастапқы бет ---------- */
 const ACH=[['🏆','«Жаңашыл ұстаз»','І орын'],['🥇','«Мәңгілік ел ұстаздары»','І орын'],['🎓','«Парасатты педагог»','І дәрежелі диплом'],['⭐','«Үздік педагог»','І дәрежелі диплом'],['🧮','«Алтын сақа» олимпиадасы','шәкірттері: 4 диплом (аудан)'],['📚','Біліктілік курстары','функциялар мен графиктерді оқыту әдістемесі; «Өрлеу», 80 сағ']];
 function renderHome(){view='home';setNav();
  app().innerHTML=`<div class="homehero"><div class="hh-l"><div class="hh-logo">MathLevel Up</div><div class="hh-sl">Есеп шығар – деңгейіңді көтер!</div><div class="hh-chips"><span>Алгебра 7</span><span>Геометрия 7</span><span>ҚТЖ · ҚМЖ</span><span>Интерактивті тақта</span></div></div><div class="hh-r"><div class="scene sm"><div class="cube3 spin">${['f','b','l','r','t','d'].map(f=>`<i class="fc ${f}"></i>`).join('')}</div></div></div></div>
- <div class="panels"><button class="pcard stu" onclick="S?show('map'):(loginMode='code',renderLogin())"><span class="pic">🎒</span><b>Оқушы панелі</b><span>карта · деңгей · шексіз есеп</span></button>
+ <div class="panels"><button class="pcard stu" onclick="S?show('map'):(gate={step:0},renderStudentGate())"><span class="pic">🎒</span><b>Оқушы панелі</b><span>карта · деңгей · шексіз есеп</span></button>
   <button class="pcard tea" onclick="tArea='board';show('teacher')"><span class="pic">👨‍🏫</span><b>Мұғалім панелі</b><span>тақта · кабинет · құжаттар</span></button>
   <button class="pcard mod" onclick="openPres(0)"><span class="pic">🧭</span><b>Модель</b><span>презентация режимі</span></button></div>
  <div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">🏅 Мұғалімнің жетістіктері</h2><span class="mut">Егемберді Төлен Қайсарұлы · математика пәні мұғалімі</span></div><div class="achg">${ACH.map(a=>`<div class="achc"><span>${a[0]}</span><b>${a[1]}</b><i>${a[2]}</i></div>`).join('')}</div></div>`}
@@ -3034,7 +3062,7 @@ const PRES=[
  {bg:'#2a1f6e',h:'Мәселе',ic:['😴','🧩','🗂'],cap:['қызығушылық төмендейді','алгебра мен геометрия бөлек','оқулық, ҚТЖ, ҚМЖ, тақта, журнал – бөлек']},
  {bg:'#4b2fb5',h:'Шешім: бір орта',ic:['📖','📅','📝','🖥','📒'],cap:['оқулық','ҚТЖ','ҚМЖ','тақта','журнал']},
  {bg:'#141b4d',h:'LEVEL моделі',ic:['L','E','V','E','L'],cap:['сабақ','зертте','тақтада сыз','жаттық','деңгейіңді көтер'],tiles:true},
- {bg:'#1d4fa8',h:'Оқушы панелі',ic:['🗺','🧊','♾','🏅'],cap:['оқу картасы','3D түсіндіру','миллиондаған есеп','12 атақ'],go:["S?show('map'):(loginMode='code',renderLogin())",'Ашып көрсету']},
+ {bg:'#1d4fa8',h:'Оқушы панелі',ic:['🗺','🧊','♾','🏅'],cap:['оқу картасы','3D түсіндіру','миллиондаған есеп','12 атақ'],go:["S?show('map'):(gate={step:0},renderStudentGate())",'Ашып көрсету']},
  {bg:'#6a2fb5',h:'Мұғалім панелі',ic:['🖥','👨‍🏫','📁'],cap:['интерактивті тақта','кабинет: мониторинг','құжаттар: ҚТЖ, ҚМЖ, журнал'],go:["tArea='board';show('teacher')",'Ашып көрсету']},
  {bg:'#141b4d',h:'Тақтадағы сабақ',ic:['😊','🧊','📖','🎲','🎮','💬'],cap:['ахуал','жаңа сабақ 3D','оқулық','кездейсоқ оқушы','ойын','кері байланыс']},
  {bg:'#7b2f8f',h:'Перспектива',ic:['5','7','9','11'],cap:['5–6 сынып','7 – пилот','8–9 сынып','10–11 · ҰБТ'],tiles:true}];
