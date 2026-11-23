@@ -288,6 +288,20 @@ table.t th{background:linear-gradient(180deg,#f5f7ff,#eef1fb)}
 .gnode.dn{background:var(--c);box-shadow:0 6px 0 rgba(0,0,0,.25)}.gnode.dn .gn{color:#fff}.gnode.lk{background:#eef0f6;box-shadow:0 6px 0 #d8dce8;cursor:default}.gnode.cu{animation:pulse 1.6s infinite;box-shadow:0 6px 0 #b67a00,0 0 0 5px #ffd54a inset,0 0 24px rgba(255,200,60,.8)}
 .gme{position:absolute;top:-34px;font-size:28px;animation:bob 1.2s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-6px)}}
 .gboss{width:90px;height:90px;background:linear-gradient(180deg,#3a2a7a,#141b4d)}.gboss .gn{font-size:40px}.gboss.lk{background:#d8dce8}.gboss .gs{color:#7b5cfa}
+.mintro,.mend{--c:#4057e3;max-width:720px;margin:20px auto;text-align:center;padding:34px 26px;border-radius:30px;color:#fff;background:radial-gradient(600px 300px at 50% 0,rgba(255,255,255,.18),transparent),linear-gradient(160deg,#141b4d,var(--c));box-shadow:0 20px 40px rgba(20,27,77,.35);display:flex;flex-direction:column;gap:14px;align-items:center}
+.mi-w,.me-i{font-size:90px;animation:bob 1.6s ease-in-out infinite;filter:drop-shadow(0 10px 14px rgba(0,0,0,.35))}.mi-t,.me-t{font:900 30px Nunito,system-ui,sans-serif}.mi-s span{font-size:40px;color:rgba(255,255,255,.25)}.mi-s span.on{color:#ffd54a;text-shadow:0 0 16px rgba(255,213,74,.8)}.mi-s.big span{font-size:70px;display:inline-block;animation:pop .5s both}
+@keyframes pop{from{transform:scale(0) rotate(-90deg)}to{transform:none}}
+.mi-r,.me-r{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.mi-r span,.me-r span{background:rgba(255,255,255,.16);padding:8px 14px;border-radius:14px;font:900 18px Nunito,system-ui,sans-serif}.mi-b{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.mgame{--c:#4057e3;max-width:900px;margin:10px auto;position:relative}.mhud{display:flex;align-items:center;gap:12px;background:#141b4d;color:#fff;border-radius:22px;padding:10px 14px;box-shadow:0 10px 24px rgba(20,27,77,.3)}
+.mx{border:0;background:rgba(255,255,255,.15);color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;font-weight:900}.mhp span{font-size:24px;transition:.3s}.mhp span.lost{filter:grayscale(1);opacity:.3;transform:scale(.8)}
+.mtrack{flex:1;height:14px;background:rgba(255,255,255,.15);border-radius:99px;position:relative}.mtrack i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#1d9d62,#ffd54a);transition:width .6s}.mhero{position:absolute;top:-22px;font-size:30px;transform:translateX(-50%) scaleX(-1);transition:left .6s}.mflag{position:absolute;right:-6px;top:-20px;font-size:26px}
+.mcoin{font:900 20px Nunito,system-ui,sans-serif;background:rgba(255,213,74,.2);padding:4px 12px;border-radius:99px}.mcombo{font:900 20px Nunito,system-ui,sans-serif;color:#ffd54a;animation:pulse 1s infinite}
+.mcard{margin-top:16px;background:#fff;border-radius:26px;padding:22px;box-shadow:0 0 0 4px var(--c) inset,0 14px 30px rgba(20,27,77,.12)}.mcard .prob{font-size:26px}.mcard .choice{font-size:20px;border-radius:16px}.mnum{font:900 15px Nunito,system-ui,sans-serif;color:var(--mut);margin-bottom:6px}
+.mcard.shake{animation:shk .45s}
+#mfx{position:fixed;inset:0;pointer-events:none;z-index:960}.fxt{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font:900 70px Nunito,system-ui,sans-serif;animation:fxu 1.1s ease-out forwards}.fxt.ok{color:#1d9d62;text-shadow:0 4px 0 #fff}.fxt.bad{font-size:90px}
+@keyframes fxu{from{opacity:0;transform:translate(-50%,-20%) scale(.6)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}to{opacity:0;transform:translate(-50%,-120%) scale(1)}}
+.conf{position:absolute;top:45%;width:12px;height:16px;border-radius:3px;animation:cf 1.2s ease-out forwards}@keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
+.mend.lose{background:linear-gradient(160deg,#141b4d,#5a4a8a)}
 </style>
 </head>
 <body>
@@ -1616,13 +1630,13 @@ function renderMap(){
   const op=LS2.filter(l=>isOpen(l)),next=op.find(l=>S.stars[l.p]==null)||op.slice().sort((x,y)=>(S.stars[x.p]||0)-(S.stars[y.p]||0))[0];
   let h=`<div class="ghud"><div class="gav2" style="--p:${pc}"><span>${lv}</span></div><div class="ghi"><b>${esc((S.name||'').split(' ').slice(0,2).join(' '))}</b><div class="gxp"><i style="width:${pc}%"></i></div><span>${title(lv)} · ${S.xp||0} XP</span></div>
    <div class="gstat"><span>⭐ ${stars}</span><span>🔥 ${S.streak||0}</span><span>🧮 ${S.solved||0}</span></div>
-   ${next?`<button class="gplay" onclick="openLesson(${next.p})">▶ ОЙНАУ<small>§ ${next.num}</small></button>`:''}</div>
+   ${next?`<button class="gplay" onclick="missionIntro(${next.p})">▶ ОЙНАУ<small>§ ${next.num}</small></button>`:`<button class="gplay" style="filter:grayscale(1)" onclick="toast('🔒 Мұғалім сабақтан кейін тақырыпты ашады')">🔒 КҮТУ</button>`}</div>
    <div class="gworlds">${[['alg','🔢 Алгебра әлемі'],['geo','📐 Геометрия әлемі']].map(([k,n])=>`<button class="${mapSubj===k?'on':''}" onclick="mapSubj='${k}';renderMap()">${n}<small>${L.filter(l=>l.subj===k&&S.stars[l.p]!=null).length}/${L.filter(l=>l.subj===k).length}</small></button>`).join('')}</div>`;
   SS.forEach(sec=>{const W=WORLD[sec.n]||['🌍',sec.title],open=secOpen(sec.n),ls=secLessons(sec.n),dn=ls.filter(l=>S.stars[l.p]!=null).length;let cur=false;
     h+=`<div class="gworld ${open?'':'glock'}" style="--c:${sec.color}"><div class="gwh"><span class="gwi">${W[0]}</span><div><b>${W[1]}</b><small>${sec.title}</small></div><span class="gwp">${dn}/${ls.length}</span></div><div class="gpath">`;
     ls.forEach((l,j)=>{const o=isOpen(l),st=S.stars[l.p];let c='gnode';if(!o)c+=' lk';else if(st!=null)c+=' dn';else if(!cur){c+=' cu';cur=true}
-      h+=`<button class="${c}" style="--y:${[0,-26,-8,-30,-4][j%5]}px" title="§ ${l.num}. ${esc(l.t)}" ${o?`onclick="openLesson(${l.p})"`:''}>${c.includes('cu')?'<span class="gme">🙂</span>':''}<span class="gn">${o?l.num:'🔒'}</span><span class="gs">${[1,2,3].map(i=>st>=i?'★':'☆').join('')}</span></button>`});
-    const bo=bossOpen(sec.n);h+=`<button class="gnode gboss ${bo?'':'lk'} ${S.boss[sec.n]?'dn':''}" title="Өзіңді тексер!" ${bo?`onclick="openBoss(${sec.n})"`:''}><span class="gn">${S.boss[sec.n]?'👑':'👾'}</span><span class="gs">${S.boss[sec.n]?'жеңдің!':'БОСС'}</span></button></div></div>`});
+      h+=`<button class="${c}" style="--y:${[0,-26,-8,-30,-4][j%5]}px" title="§ ${l.num}. ${esc(l.t)}" onclick="missionIntro(${l.p})">${c.includes('cu')?'<span class="gme">🙂</span>':''}<span class="gn">${o?l.num:'🔒'}</span><span class="gs">${[1,2,3].map(i=>st>=i?'★':'☆').join('')}</span></button>`});
+    const bo=bossOpen(sec.n);h+=`<button class="gnode gboss ${bo?'':'lk'} ${S.boss[sec.n]?'dn':''}" title="Өзіңді тексер!" onclick="${bo?`openBoss(${sec.n})`:`toast('👾 Босс бөлімнің барлық деңгейінен өткенде ашылады')`}"><span class="gn">${S.boss[sec.n]?'👑':'👾'}</span><span class="gs">${S.boss[sec.n]?'жеңдің!':'БОСС'}</span></button></div></div>`});
   app().innerHTML=h;
 }
 
@@ -3165,6 +3179,34 @@ function kmjPrint(){const w=window.open('','_blank');if(!w){toast('Басып ш
 function teacherKMJAll(){const box=document.getElementById('tbody');const rows=KTP[ktpSubj];if(ktpQ==null)ktpQ=2;
  box.innerHTML=`<div class="card"><div class="steps" style="margin:0 0 10px">${[['alg','🔢 Алгебра'],['geo','📐 Геометрия']].map(([k,n])=>`<button class="${ktpSubj===k?'on':''}" onclick="ktpSubj='${k}';teacherKMJAll()">${n}</button>`).join('')}</div><div class="steps" style="margin:0">${[1,2,3,4].map(q=>`<button class="${ktpQ===q?'on':''}" onclick="ktpQ=${q};teacherKMJAll()">${q}-тоқсан</button>`).join('')}</div></div>
  <div class="kmjlist">${rows.map((r,i)=>r.q!==ktpQ?'':`<div class="kmjrow ${kmjOf(ktpSubj,r)?'own':''}"><span class="kn">№${r.n}</span><span class="kdt">${fmtD(r.d)}</span><span class="kt">${esc(r.t)}${r.k!=='les'?` <span class="pill" style="font-size:11px">${r.k==='tjb'?'ТЖБ':'БЖБ'}</span>`:''}</span><span class="pill" style="font-size:11px;background:${kmjOf(ktpSubj,r)?'#e3f5ec':'#eef0fb'}">${kmjOf(ktpSubj,r)?'мұғалімнің ҚМЖ':'автоматты ҚМЖ'}</span><button class="btn ghost" style="padding:5px 12px" onclick="openKMJ('${ktpSubj}',${i})">📝 Ашу</button></div>`).join('')}</div>`}
+
+/* ---------- 🎮 Миссия: тақырып бойынша ойын (10 есеп, жүрек, комбо, жүгіретін кейіпкер) ---------- */
+let M=null;const HEROES=['🚀','🦄','🐎','🏎️','🦅'];
+function missionIntro(p){const l=L.find(x=>x.p===p);if(!isOpen(l)){toast(S&&S.code?'🔒 Мұғалім бұл тақырыпты сабақтан кейін ашады':'🔒 Алдыңғы деңгейден өт');return}
+ const W=WORLD[l.s]||['🎯',''],st=S.stars[l.p]||0;
+ app().innerHTML=`<div class="mintro" style="--c:${SECTIONS[l.s-1].color}"><div class="mi-w">${W[0]}</div><div class="mi-t">§ ${l.num}. ${esc(l.t)}</div><div class="mi-s">${[1,2,3].map(i=>`<span class="${st>=i?'on':''}">★</span>`).join('')}</div>
+  <div class="mi-r"><span>❤️❤️❤️</span><span>🎯 10 есеп</span><span>🪙 +XP</span></div>
+  <div class="mi-b"><button class="gplay" onclick="missionStart(${p})">▶ МИССИЯНЫ БАСТАУ</button><button class="btn ghost" onclick="openLesson(${p})">📖 Алдымен түсініп ал</button><button class="btn ghost" onclick="show('map')">‹ Әлемге</button></div></div>`}
+function missionStart(p){const l=L.find(x=>x.p===p);const pool=[...Array(4)].map(()=>pick(l.gA)).concat([...Array(4)].map(()=>pick(l.gB)),[...Array(2)].map(()=>pick(l.gC)));
+ M={l,qs:pool.map(g=>{const q=makeProblem(g);if(!q._l)q._l=l;return q}),i:0,hp:3,combo:0,xp:0,ok:0,hero:pick(HEROES),t0:Date.now()};missionDraw()}
+function missionDraw(){const l=M.l,n=M.qs.length;if(M.hp<=0||M.i>=n)return missionEnd();const q=M.qs[M.i],pr=M.i/n*100;
+ app().innerHTML=`<div class="mgame" style="--c:${SECTIONS[l.s-1].color}"><div class="mhud"><button class="mx" onclick="if(confirm('Миссиядан шығасың ба?'))show('map')">✕</button><div class="mhp">${[0,1,2].map(i=>`<span class="${i<M.hp?'':'lost'}">❤️</span>`).join('')}</div><div class="mtrack"><i style="width:${pr}%"></i><span class="mhero" style="left:${pr}%">${M.hero}</span><span class="mflag">🏁</span></div><div class="mcoin">🪙 ${M.xp}</div>${M.combo>=2?`<div class="mcombo">🔥 ×${M.combo}</div>`:''}</div>
+  <div class="mcard"><div class="mnum">${M.i+1} / ${n} · ${M.i<4?'🟢 A':M.i<8?'🟠 B':'🔴 C'}</div><div id="mbox"></div></div><div id="mfx"></div></div>`;
+ problemUI(document.getElementById('mbox'),q,ok=>missionAns(ok))}
+function missionAns(ok){const l=M.l;track(l,ok);
+ if(ok){M.ok++;M.combo++;const g=(M.i<4?10:M.i<8?15:20)+(M.combo>=3?5:0);M.xp+=g;S.solved++;S.streak=(S.streak||0)+1;fx('ok','+'+g);}
+ else{M.combo=0;M.hp--;S.streak=0;fx('bad','💔');const c=document.querySelector('.mcard');if(c){c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}}
+ save();setTimeout(()=>{M.i++;missionDraw()},ok?900:1700)}
+function fx(kind,t){const box=document.getElementById('mfx');if(!box)return;const f=document.createElement('div');f.className='fxt '+kind;f.textContent=t;box.append(f);
+ if(kind==='ok')for(let i=0;i<26;i++){const c=document.createElement('i');c.className='conf';c.style.cssText=`left:${50+(Math.random()-.5)*30}%;background:${['#ffd54a','#7b5cfa','#4f7bff','#1d9d62','#e4572e'][i%5]};--dx:${(Math.random()-.5)*600}px;--dy:${-200-Math.random()*300}px;--r:${Math.random()*720}deg`;box.append(c);setTimeout(()=>c.remove(),1200)}
+ setTimeout(()=>f.remove(),1100)}
+function missionEnd(){const l=M.l,n=M.qs.length,acc=M.ok/n,won=M.hp>0,st=!won?0:acc>=.9?3:acc>=.7?2:1,old=S.stars[l.p]||0;
+ if(st>old)S.stars[l.p]=st;S.practice[l.p]=(S.practice[l.p]||0)+M.ok;pushHist('mis',l.p,M.ok,n);if(M.xp)addXP(M.xp+(st===3?30:0),st===3?'үш жұлдыз!':'миссия');save();
+ const nx=L.find(x=>x.subj===l.subj&&L.indexOf(x)>L.indexOf(l)&&isOpen(x));
+ app().innerHTML=`<div class="mend ${won?'win':'lose'}"><div class="me-i">${won?'🏆':'💫'}</div><div class="me-t">${won?'Миссия орындалды!':'Жүректер таусылды'}</div><div class="mi-s big">${[1,2,3].map(i=>`<span class="${st>=i?'on':''}" style="animation-delay:${i*.25}s">★</span>`).join('')}</div>
+  <div class="me-r"><span>✅ ${M.ok}/${n}</span><span>🪙 +${M.xp+(st===3?30:0)} XP</span><span>⏱ ${Math.round((Date.now()-M.t0)/1000)} с</span></div>
+  <div class="mi-b"><button class="gplay" onclick="missionStart(${l.p})">↺ ҚАЙТА</button>${nx&&won?`<button class="btn" onclick="missionIntro(${nx.p})">Келесі: § ${nx.num} →</button>`:''}<button class="btn ghost" onclick="show('map')">🗺 Әлемге</button></div></div><div id="mfx"></div>`;
+ if(won)for(let k=0;k<3;k++)setTimeout(()=>fx('ok',''),k*350)}
 /* ---------- 🏠 бастапқы бет ---------- */
 const ACH=[['🏆','«Жаңашыл ұстаз»','І орын'],['🥇','«Мәңгілік ел ұстаздары»','І орын'],['🎓','«Парасатты педагог»','І дәрежелі диплом'],['⭐','«Үздік педагог»','І дәрежелі диплом'],['🧮','«Алтын сақа» олимпиадасы','шәкірттері: 4 диплом (аудан)'],['📚','Біліктілік курстары','функциялар мен графиктерді оқыту әдістемесі; «Өрлеу», 80 сағ']];
 function renderHome(){view='home';setNav();
