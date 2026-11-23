@@ -1826,7 +1826,7 @@ const subjTabs=(fn)=>`<div class="steps" style="margin:0 0 12px">${[['alg','🔢
 function teacherLessons(){
   if(!tCode&&myClasses.length)tCode=myClasses[0].code;if(!window._tol&&tCode){window._tol=1;teacherOpenLoad().then(()=>{if(view==='teacher'&&tTab==='lesson'&&!TL)teacherLessons()})}
   const sb=tSubj==='geo'?'geo':'alg',nx=nextKTP(sb),r=nx>=0?KTP[sb][nx]:null,today=r&&r.d===todayISO(),ls=r?r.ps.map(p=>p===200?REV6:L.find(l=>l.p===p)).filter(Boolean):[],V=ls[0]?VIS[visFor(ls[0])]:null;
-  let h=`<div class="todayhero"><div style="flex:1"><div class="th-tag">${today?'📌 Бүгінгі сабақ':'⏭ Келесі сабақ'} · ${r?fmtD(r.d)+' · №'+r.n:''}</div><div class="th-t">${r?esc(r.t):'—'}</div><div class="th-chips">${ls.map(l=>`<span>📖 § ${l.num}</span>`).join('')}${r&&kmjOf(sb,r)?'<span>📝 ҚМЖ</span>':''}<span>🎬 3D</span><span>🎲 Кездейсоқ</span><span>🎮 Жарыс</span></div></div>${r?`<div style="display:flex;flex-direction:column;gap:10px"><button class="btn gold th-go" onclick="teachLesson(ktpLesson('${sb}',${nx}))">▶ Тақтада бастау</button>${openBtnHTML(sb,nx,true)}</div>`:''}</div>
+  let h=`<div class="todayhero"><div style="flex:1"><div class="th-tag">${today?'📌 Бүгінгі сабақ':'⏭ Келесі сабақ'} · ${r?fmtD(r.d)+' · №'+r.n:''}</div><div class="th-t">${r?esc(r.t):'—'}</div><div class="th-chips">${ls.map(l=>`<span>📖 § ${l.num}</span>`).join('')}${r&&kmjOf(sb,r)?'<span>📝 ҚМЖ</span>':''}<span>🎬 3D</span><span>🎲 Кездейсоқ</span><span>🎮 Жарыс</span></div></div>${r?`<div style="display:flex;flex-direction:column;gap:10px"><button class="btn gold th-go" onclick="teachLesson(ktpLesson('${sb}',${nx}))">▶ Тақтада бастау</button>${openBtnHTML(sb,nx,true)}<div class="row" style="gap:8px"><button class="btn" style="flex:1;background:linear-gradient(135deg,#ff5a36,#7a4fd8)" onclick="teachLesson(ktpLesson('${sb}',${nx}));cbOpen()">🐉 BOSS</button><button class="btn" style="flex:1;background:linear-gradient(135deg,#1e2a7a,#7a4fd8)" onclick="teachLesson(ktpLesson('${sb}',${nx}));millOpen()">💰 Миллионер</button></div></div>`:''}</div>
   <div class="card">${subjTabs('teacherLessons')}<div class="row" style="justify-content:space-between"><h2 style="margin:0">${tSubj==='geo'?'📐 Геометрия 7':'🔢 Алгебра 7'} · барлық тақырып</h2><button class="btn ghost" onclick="tArea='docs';tTab='ktp';show('teacher')">📅 ҚТЖ бойынша →</button></div></div>`;
   SECTIONS.filter(sec=>sec.subj===tSubj).forEach(sec=>{h+=`<div class="section"><div class="shead"><div class="snum" style="background:${sec.color}">${sec.r}</div><h2 style="margin:0">${sec.title}</h2></div><div class="path">${secLessons(sec.n).map(l=>`<button class="node" onclick="teachLesson(${l.p})"><div class="pn">§ ${l.num} ${KTP_OPEN.has(l.p)?'<span title="Оқушыларға ашық">🔓</span>':'<span title="Оқушыларға жабық" style="opacity:.45">🔒</span>'}</div><div class="pt">${l.t}</div><div class="st" style="color:var(--pri);font-size:12px;font-weight:800">▶ Сабақты бастау</div></button>`).join('')}</div></div>`});
   document.getElementById('tbody').innerHTML=h;
@@ -1986,7 +1986,7 @@ function drawSlide(){
     body=`<h1>Үй тапсырмасы</h1><div class="card" style="font-size:20px"><p>1. Оқулық: <b>§ ${l.num}</b> оқу, ережесін жаттау.</p><p>2. Платформа: <b>§ ${l.num} → Жаттығу</b> бөлімінде кемінде <b>15 есеп</b> шығару.</p><p>3. Платформа: <b>§ ${l.num} → Тексеру</b> – 4/5-тен жоғары нәтиже алып, келесі параграфты ашу (+50 XP).</p><p class="mut" style="font-size:16px">Нәтижелер «Сынып мониторингі» бөлімінде автоматты көрінеді.</p></div>
      <div class="row"><button class="btn ok" onclick="exitLesson()">✔ Сабақты аяқтау</button>${L[L.indexOf(l)+1]?`<button class="btn ghost" onclick="teachLesson(${L[L.indexOf(l)+1].p})">Келесі сабақ: § ${L[L.indexOf(l)+1].num} →</button>`:''}</div>`;
   }
-  app().innerHTML=`<div class="card" style="padding:14px 18px"><div class="row" style="justify-content:space-between"><div><span class="pill" style="background:${sec.color};color:#fff">§ ${l.num}. ${l.t}</span></div><div class="row">${(()=>{const k=ktpIdxForLesson(l);return k?openBtnHTML(k[0],k[1]):''})()}<button class="btn ghost" onclick="ink()" title="Тақтаның үстінен қаламмен сызу">✏️ Сызу</button><button class="btn ghost" onclick="closeInk();exitLesson()">✕ Шығу</button></div></div>
+  app().innerHTML=`<div class="card" style="padding:14px 18px"><div class="row" style="justify-content:space-between"><div><span class="pill" style="background:${sec.color};color:#fff">§ ${l.num}. ${l.t}</span></div><div class="row">${(()=>{const k=ktpIdxForLesson(l);return k?openBtnHTML(k[0],k[1]):''})()}<button class="btn" style="background:linear-gradient(135deg,#ff5a36,#7a4fd8)" onclick="cbOpen()" title="Бүкіл сынып телефонмен бірге BOSS-қа шабуыл жасайды">🐉 BOSS</button><button class="btn" style="background:linear-gradient(135deg,#1e2a7a,#7a4fd8)" onclick="millOpen()" title="Кім миллионер? – тақтада">💰 Миллионер</button><button class="btn ghost" onclick="ink()" title="Тақтаның үстінен қаламмен сызу">✏️ Сызу</button><button class="btn ghost" onclick="closeInk();exitLesson()">✕ Шығу</button></div></div>
    <div class="dots" style="margin:12px 0 0;flex-wrap:wrap">${slides.map((s,j)=>`<i title="${s.n}" style="cursor:pointer;width:auto;flex:1;min-width:24px;height:10px" class="${j<i?'ok':j===i?'cur':''}" onclick="stopTimer();TL.i=${j};drawSlide()"></i>`).join('')}</div>
    <div class="row" style="justify-content:space-between;margin-top:6px"><div class="mut" style="font-weight:800">${i+1}/${slides.length} · <span class="pill" style="background:${sl.st==='Басы'?'#e3f5ec':sl.st==='Ортасы'?'#e7ecfd':'#fdefe3'}">Сабақтың ${sl.st.toLowerCase()}</span> ${sl.n} · <b>${sl.m?sl.m+' мин':'қосымша'}</b></div><span class="pill" id="lclock" style="font-size:15px">🕒 0:00 / 45:00</span></div></div>
    <div class="card board" style="min-height:420px">${body}</div>
@@ -3614,6 +3614,150 @@ function bzEnd(st){const k='BLZ'+tstSubj,old=S.qt[k]||0;S.qt[k]=Math.max(old,BZ.
 .tsc .tsi{font:900 24px Nunito;color:var(--c,#3a5bdc)}.tsc .tsr{margin-top:4px;align-self:flex-start;background:#e3f5ec;color:#147447;border-radius:999px;padding:3px 10px;font-weight:900;font-size:13px}
 .tsc.lk{filter:grayscale(1);opacity:.55}.tsc.mar{--c:#1d9d62;background:linear-gradient(135deg,#eafff3,#fff)}.tsc.blz{--c:#e47a2e;background:linear-gradient(135deg,#fff3e6,#fff)}
 .tsc.bjb{--c:#e47a2e}.tsc.tjb{--c:#c2417a}.tsc.mar .tsi,.tsc.blz .tsi{font-size:34px}`;document.head.appendChild(css)})();
+
+/* =====================================================================
+   🐉 BOSS (бүкіл сынып бірге) · 💰 Кім миллионер? (тақтада)
+   Firebase: meta/raid, meta/mill (мұғалім) · players/<uid>/raid, /mv (оқушы)
+   ===================================================================== */
+/* --- sync-ке raid/mv өрістерін қосу (set кезінде өшіп қалмауы үшін) --- */
+sync=async function(){
+  if(!backend||!uid||!S) return;
+  const path=S.code?`${CROOT(S.code)}/players/${uid}`:`${DB_ROOT}/players/${uid}`;
+  try{await backend.ref(path).set({name:S.name,cls:S.cls,sid:S.sid||null,xp:S.xp,lvl:lvlOf(S.xp),solved:S.solved,best:S.best,passed:Object.keys(S.stars).length,stars:S.stars,boss:S.boss,acc:S.acc||{},hist:(S.hist||[]).slice(-30),practice:S.practice||{},raid:S.raid||null,mv:S.mv||null,t:Date.now()})}catch(e){console.warn('sync',e)}
+};
+const myPath=()=>S&&S.code?`${CROOT(S.code)}/players/${uid}`:null;
+function gProb(gens){let p;for(let k=0;k<30;k++){p=makeProblem(pick(gens));if(!p.type)break}return p}
+function to4(p){if(p.choices&&p.choices.length>=2)return p;const a=p.ans,n=typeof a==='number'?a:parseNum(a);
+ const d=[n+1,n-1,n*2,-n,n+10,n+2,Math.round(n/2)].filter(x=>x!==n&&isFinite(x));const w=[...new Set(d.map(x=>fnum(x)))];
+ return {...p,...C(fnum(n),...shuf(w).slice(0,3))}}
+const DRAGON=`<div class="drg"><div class="drg-e">🐉</div></div>`;
+(function(){const css=document.createElement('style');css.textContent=`
+.gov{position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 50% 30%,#3a1d6e,#120a2e 70%);color:#fff;overflow:auto;font-family:Nunito}
+.gov .gvin{max-width:1250px;margin:0 auto;padding:18px}
+.gov h1{font:900 34px Nunito;margin:0}.gov .mut{color:#c8c2ee}
+.gtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.drg{position:relative;text-align:center;margin:6px 0}.drg-e{font-size:170px;line-height:1;filter:drop-shadow(0 0 40px #ff5a36);animation:drgf 2.4s ease-in-out infinite}
+.drg.hit .drg-e{animation:drgh .35s}.drg.dead .drg-e{filter:grayscale(1);transform:rotate(90deg) scale(.7);opacity:.5;animation:none}
+@keyframes drgf{50%{transform:translateY(-10px) scale(1.03)}}@keyframes drgh{25%{transform:translateX(-14px) rotate(-6deg);filter:drop-shadow(0 0 40px #fff) brightness(2)}75%{transform:translateX(14px) rotate(6deg)}}
+.hpb{height:34px;border-radius:999px;background:#2a1650;border:3px solid #ffcf4a;overflow:hidden;position:relative}
+.hpb i{display:block;height:100%;background:linear-gradient(90deg,#ff3d3d,#ff9a3d);transition:width .5s}
+.hpb span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 18px Nunito;text-shadow:0 2px 4px #000}
+.dmgf{position:absolute;left:50%;top:40%;font:900 40px Nunito;color:#ffcf4a;text-shadow:0 3px 8px #000;animation:dmgf 1s forwards;pointer-events:none}
+@keyframes dmgf{to{transform:translate(-50%,-120px);opacity:0}}
+.gcols{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}@media(max-width:800px){.gcols{grid-template-columns:1fr}.drg-e{font-size:110px}}
+.gpan{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:14px}
+.gpan .prob{color:#fff}.gov .choice{color:#141b4d}
+.top5 div{display:flex;justify-content:space-between;padding:6px 10px;border-radius:12px;margin:4px 0;background:rgba(255,255,255,.07);font-weight:800}
+.mlad{display:flex;flex-direction:column-reverse;gap:3px}.mlad div{padding:5px 12px;border-radius:10px;font-weight:900;display:flex;justify-content:space-between;color:#c8c2ee}
+.mlad .sf{color:#ffcf4a}.mlad .cu{background:#ffcf4a;color:#141b4d}.mlad .dn{color:#6fe3a5}
+.mq{font:900 28px Nunito;text-align:center;padding:18px;border-radius:20px;background:linear-gradient(180deg,#1e2a7a,#0f1650);border:3px solid #6f8cff;margin-bottom:12px}
+.mch{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mch button{font:900 22px Nunito;padding:16px;border-radius:999px;border:3px solid #6f8cff;background:#0f1650;color:#fff;cursor:pointer;text-align:left}
+.mch button b{color:#ffcf4a;margin-right:8px}.mch button.sel{background:#e47a2e;border-color:#ffcf4a}.mch button.ok{background:#1d9d62}.mch button.no{background:#c2414a}.mch button.hid{visibility:hidden}
+.mlife{display:flex;gap:10px;justify-content:center;margin:10px 0}.mlife button{font-size:22px;padding:10px 16px;border-radius:999px;border:3px solid #ffcf4a;background:#2a1650;color:#fff;cursor:pointer;font-weight:900}.mlife button:disabled{opacity:.3;cursor:default}
+.vbar{display:flex;align-items:center;gap:8px;margin:5px 0;font-weight:900}.vbar i{display:block;height:22px;background:#ffcf4a;border-radius:6px;transition:width .4s}
+.stban{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:8000;background:linear-gradient(135deg,#ff5a36,#7a4fd8);color:#fff;border:0;border-radius:999px;padding:16px 26px;font:900 20px Nunito;box-shadow:0 10px 30px rgba(0,0,0,.35);cursor:pointer;animation:drgf 1.6s infinite}`;document.head.appendChild(css)})();
+async function ensureClassTL(){if(!TL.meta){if(!tCode&&myClasses.length)tCode=myClasses[0].code;if(!tCode&&typeof PRESET_CLASSES!=='undefined'){const c=PRESET_CLASSES[0];await createClass(c.name,c.names,{code:c.code,pin:c.pin})}TL.meta=tCode?await getMeta(tCode):null;TL.called=TL.called||[]}}
+async function metaSet(k,v){if(TL.meta)TL.meta[k]=v;if(backend&&tCode){try{await backend.ref(`${CROOT(tCode)}/meta/${k}`).set(v)}catch(e){toast('Firebase: '+e.message)}}}
+
+/* ===================== 🐉 BOSS · МҰҒАЛІМ (тақта) ===================== */
+let CB=null;
+async function cbOpen(){if(!TL){toast('Алдымен сабақты тақтада ашыңыз');return}await ensureClassTL();
+ const ps=(TL.l.ktp?TL.l.ktp.ps:[TL.l.p]).filter(p=>p!==200&&L.find(l=>l.p===p));const n=TL.meta&&TL.meta.roster?Object.keys(TL.meta.roster).length:20;
+ CB={id:'r'+Date.now(),ps:ps.length?ps:[TL.l.p],hp:n*60,dur:420,on:false,dmg:0,bd:0,pl:{},last:0,prob:null,cur:null};
+ const o=document.createElement('div');o.className='gov';o.id='cbov';document.body.appendChild(o);cbDraw()}
+function cbTotal(){return CB.bd+Object.values(CB.pl).reduce((a,x)=>a+(x.dmg||0),0)}
+function cbDraw(){const o=document.getElementById('cbov');if(!o||!CB)return;const tot=Math.min(cbTotal(),CB.hp),left=CB.hp-tot,pc=Math.round(left/CB.hp*100);
+ const tl=CB.on?Math.max(0,Math.ceil((CB.t0+CB.dur*1000-Date.now())/1000)):CB.dur,dead=left<=0;
+ const top=Object.values(CB.pl).filter(x=>x.dmg).sort((a,b)=>b.dmg-a.dmg).slice(0,5);
+ o.innerHTML=`<div class="gvin"><div class="gtop"><div><h1>🐉 BOSS</h1><div class="mut">Бүкіл сынып бірге! Телефондағы әр дұрыс жауап – BOSS-қа соққы ⚔️</div></div>
+  <div class="row"><span class="pill" style="font-size:24px;background:#ffcf4a;color:#141b4d">⏱ <b id="cbt">${Math.floor(tl/60)}:${String(tl%60).padStart(2,'0')}</b></span><button class="btn ghost" onclick="cbClose()">✕ Жабу</button></div></div>
+  <div class="gcols"><div><div class="drg ${dead?'dead':''}" id="drg">${DRAGON.replace('<div class="drg">','').replace(/<\/div>$/,'')}</div>
+   <div class="hpb"><i style="width:${pc}%"></i><span>❤️ ${left} / ${CB.hp}</span></div>
+   ${dead?`<div style="text-align:center;margin-top:14px"><div style="font:900 44px Nunito;color:#ffcf4a">🏆 ЖЕҢІС! BOSS ЖЕҢІЛДІ!</div><p class="mut">Сынып бірлесіп ${tot} соққы жасады</p></div>`:
+   !CB.on?`<div style="text-align:center;margin-top:16px"><button class="gplay" onclick="cbStart()">⚔️ ШАБУЫЛДЫ БАСТАУ</button><p class="mut">Оқушылар телефондағы «🎮 Ойын» бетінде тұрсын – шабуыл өздерінде автоматты ашылады.${backend?'':'<br>⚠️ Интернет жоқ: тек тақтадан соққы жасауға болады.'}</p></div>`:''}
+  </div><div class="gpan"><h3 style="margin:0 0 6px">⚔️ Ең мықты батырлар</h3><div class="top5">${top.map((x,i)=>`<div><span>${['🥇','🥈','🥉','4','5'][i]} ${esc(x.name||'?')}</span><span>${x.dmg}</span></div>`).join('')||'<p class="mut">Әзірге соққы жоқ</p>'}</div>
+   <p class="mut">👥 Шабуылдағылар: <b>${Object.values(CB.pl).filter(x=>x.n).length}</b> · 🖥 тақтадан: <b>${CB.bd}</b></p>
+   ${CB.on&&!dead?`<hr style="border-color:rgba(255,255,255,.15)"><div class="row" style="justify-content:space-between"><b>🎲 Тақтадан соққы (+30)</b><button class="btn gold" onclick="cbPick()">🎲 Оқушы</button></div><div id="cbName" style="font:900 26px Nunito;color:#ffcf4a;margin:6px 0">${CB.cur?esc(CB.cur.n):''}</div><div id="cbp"></div>`:''}</div></div></div>`;
+ if(CB.on&&!dead&&CB.cur&&CB.prob){problemUI(document.getElementById('cbp'),CB.prob,async ok=>{if(ok){CB.bd+=30;cbHit(30);await metaSet('raid',{...cbMeta()})}TL.cur=CB.cur;await givePoints(ok?3:1);CB.cur=null;CB.prob=null;setTimeout(cbDraw,1200)})}}
+function cbMeta(){return {id:CB.id,ps:CB.ps,hp:CB.hp,t0:CB.t0||0,dur:CB.dur,on:CB.on,bd:CB.bd}}
+function cbHit(d){const e=document.getElementById('drg');if(!e)return;e.classList.remove('hit');void e.offsetWidth;e.classList.add('hit');const f=document.createElement('div');f.className='dmgf';f.textContent='−'+d;e.appendChild(f);sfx('coin');setTimeout(()=>f.remove(),1000)}
+async function cbStart(){CB.on=true;CB.t0=Date.now();sfx('go');await metaSet('raid',cbMeta());
+ if(backend&&tCode){const ref=backend.ref(CROOT(tCode)+'/players');const h=sn=>{const v=sn.val()||{};const pl={};Object.entries(v).forEach(([k,x])=>{if(x&&x.raid&&x.raid.id===CB.id)pl[k]={name:x.name,dmg:x.raid.dmg||0,n:x.raid.n||0}});const before=cbTotal();CB.pl=pl;const after=cbTotal();cbDraw();if(after>before)cbHit(after-before);cbCheck()};ref.on('value',h);CB.off=()=>ref.off('value',h)}
+ CB.tm=setInterval(()=>{const e=document.getElementById('cbt');const tl=Math.max(0,Math.ceil((CB.t0+CB.dur*1000-Date.now())/1000));if(e)e.textContent=`${Math.floor(tl/60)}:${String(tl%60).padStart(2,'0')}`;if(tl<=0)cbEnd(false)},1000);cbDraw()}
+function cbCheck(){if(CB&&CB.on&&cbTotal()>=CB.hp)cbEnd(true)}
+async function cbEnd(win){if(!CB||!CB.on)return;CB.on=false;clearInterval(CB.tm);await metaSet('raid',{...cbMeta(),on:false,win:!!win});sfx(win?'win':'lose');cbDraw();
+ if(!win){const o=document.getElementById('cbov');if(o)o.querySelector('.gvin').insertAdjacentHTML('beforeend',`<div style="text-align:center;font:900 32px Nunito;margin-top:10px">⏱ Уақыт бітті! BOSS-та ${CB.hp-Math.min(cbTotal(),CB.hp)} өмір қалды – келесі жолы жеңеміз!</div>`)}}
+function cbPick(){const r=TL.meta&&TL.meta.roster;if(!r){toast('Сынып тізімі жоқ');return}const {ids,c}=fairOrder([]);const mn=c[ids[0]];const pool=ids.filter(s=>c[s]===mn);const all=Object.keys(r);let k=0;const el=document.getElementById('cbName');
+ const sp=setInterval(()=>{el.textContent=r[pick(all)].n;sfx('tick');if(++k>14){clearInterval(sp);const sid=pick(pool);CB.cur={sid,n:r[sid].n};const ls=CB.ps.map(p=>L.find(l=>l.p===p));CB.prob=gProb(ls.flatMap(l=>[...l.gA,...l.gB]));sfx('pick');cbDraw()}},70)}
+async function cbClose(){if(CB&&CB.on)await cbEnd(cbTotal()>=CB.hp);if(CB&&CB.off)CB.off();clearInterval(CB&&CB.tm);CB=null;const o=document.getElementById('cbov');if(o)o.remove();if(TL)drawSlide()}
+
+/* ===================== 🐉 BOSS · ОҚУШЫ (телефон) ===================== */
+let SR=null,_raidOff=null,_millOff=null,MV=null;
+function stListen(){if(teacher||!S||!S.code||!backend||_raidOff)return;
+ const r1=backend.ref(CROOT(S.code)+'/meta/raid');const h1=sn=>{const v=sn.val();if(!v)return;
+   if(v.on&&!(SR&&SR.id===v.id)&&!(S.raid&&S.raid.id===v.id&&S.raid.end)){stBanner(v)}
+   if(SR&&SR.id===v.id){SR.meta=v;if(!v.on)stRaidEnd(v.win)}};r1.on('value',h1);
+ const r2=backend.ref(CROOT(S.code)+'/meta/mill');const h2=sn=>{const v=sn.val();MV=v&&v.on?v:null;stVoteDraw()};r2.on('value',h2);
+ _raidOff=()=>{r1.off('value',h1);r2.off('value',h2)}}
+{const _so=syncOpen;syncOpen=async function(){const r=await _so.apply(this,arguments);stListen();return r}}
+function stBanner(v){document.querySelectorAll('.stban').forEach(x=>x.remove());const b=document.createElement('button');b.className='stban';b.innerHTML='🐉 BOSS шабуылы басталды! ⚔️ Қосыл!';b.onclick=()=>{b.remove();stRaid(v)};document.body.appendChild(b);sfx('go')}
+function stRaid(v){const ls=v.ps.map(p=>L.find(l=>l.p===p)).filter(Boolean);
+ SR={id:v.id,meta:v,ls,dmg:(S.raid&&S.raid.id===v.id)?S.raid.dmg:0,ok:0,n:0,combo:0,all:0};
+ const o=document.createElement('div');o.className='gov';o.id='srov';document.body.appendChild(o);
+ if(backend){const ref=backend.ref(CROOT(S.code)+'/players');const h=sn=>{const vv=sn.val()||{};SR.all=Object.values(vv).reduce((a,x)=>a+(x&&x.raid&&x.raid.id===SR.id?(x.raid.dmg||0):0),0);stHp()};ref.on('value',h);SR.off=()=>ref.off('value',h)}
+ stNext()}
+function stHp(){const e=document.getElementById('srhp');if(!e||!SR)return;const tot=Math.min(SR.hp=SR.meta.hp,SR.all+(SR.meta.bd||0)),left=SR.meta.hp-tot;e.innerHTML=`<i style="width:${Math.round(left/SR.meta.hp*100)}%"></i><span>❤️ ${left} / ${SR.meta.hp}</span>`}
+function stNext(){const o=document.getElementById('srov');if(!o||!SR)return;const p=gProb(SR.ls.flatMap(l=>SR.combo>=3?[...l.gB,...l.gC]:[...l.gA,...l.gB]));
+ o.innerHTML=`<div class="gvin" style="max-width:640px"><div class="gtop"><h1 style="font-size:26px">🐉 BOSS</h1><span class="pill" style="background:#ffcf4a;color:#141b4d;font-size:18px">⚔️ ${SR.dmg} · 🔥×${SR.combo}</span></div>
+  <div class="drg" id="drg" style="margin:0"><div class="drg-e" style="font-size:90px">🐉</div></div><div class="hpb" id="srhp"></div>
+  <div class="gpan" style="margin-top:12px" id="srp"></div><p class="mut" style="text-align:center">Дұрыс жауап = 10 соққы · 3 қатарынан дұрыс = ×2 🔥</p></div>`;stHp();
+ problemUI(document.getElementById('srp'),p,ok=>{SR.n++;if(ok){SR.ok++;SR.combo++;const d=SR.combo>=3?20:10;SR.dmg+=d;cbHitSt(d);S.solved++}else SR.combo=0;
+  S.raid={id:SR.id,dmg:SR.dmg,ok:SR.ok,n:SR.n};const mp=myPath();if(backend&&mp)backend.ref(mp+'/raid').set(S.raid).catch(()=>{});saveLocal();
+  setTimeout(()=>{if(SR&&SR.meta.on!==false)stNext()},ok?600:1400)})}
+function cbHitSt(d){const e=document.getElementById('drg');if(!e)return;e.classList.remove('hit');void e.offsetWidth;e.classList.add('hit');const f=document.createElement('div');f.className='dmgf';f.textContent='−'+d;e.appendChild(f);setTimeout(()=>f.remove(),1000)}
+function stRaidEnd(win){if(!SR)return;const o=document.getElementById('srov');if(SR.off)SR.off();const xp=SR.ok*5+(win?50:0);
+ S.raid={id:SR.id,dmg:SR.dmg,ok:SR.ok,n:SR.n,end:1};pushHist('qt','BOSS'+SR.id,SR.ok,Math.max(SR.n,1));addXP(xp,'BOSS');save();sfx(win?'win':'lose');
+ if(o)o.innerHTML=`<div class="gvin" style="text-align:center;max-width:600px"><div style="font-size:110px">${win?'🏆':'🐉'}</div><h1>${win?'ЖЕҢІС! BOSS жеңілді!':'Уақыт бітті!'}</h1><p style="font-size:22px">Сенің соққың: <b>${SR.dmg}</b> · дұрыс: ${SR.ok}/${SR.n}</p><p style="font-size:20px">+${xp} XP</p><button class="gplay" onclick="document.getElementById('srov').remove()">OK</button></div>`;SR=null}
+
+/* ===================== 💰 КІМ МИЛЛИОНЕР? (тақта) ===================== */
+const MLAD=[100,200,300,500,1000,2000,4000,8000,16000,32000,64000,125000,250000,500000,1000000];
+let MG=null;
+async function millOpen(){if(!TL){toast('Алдымен сабақты тақтада ашыңыз');return}await ensureClassTL();
+ MG={i:0,life:{f:1,c:1,h:1},pl:null,q:null,sel:null,state:'pick',hid:[],votes:null};const o=document.createElement('div');o.className='gov';o.id='mgov';document.body.appendChild(o);mgDraw()}
+function mgQ(){const l=TL.l,g=MG.i<5?l.gA:MG.i<10?l.gB:l.gC;MG.q=to4(gProb(g));MG.qid='q'+Date.now();MG.sel=null;MG.hid=[];MG.votes=null;MG.state='q'}
+function mgDraw(){const o=document.getElementById('mgov');if(!o||!MG)return;const L4='ABCD';
+ const lad=MLAD.map((v,i)=>`<div class="${i===MG.i&&MG.state!=='pick'?'cu':i<MG.i?'dn':''} ${i===4||i===9?'sf':''}"><span>${i+1}</span><span>${v.toLocaleString('ru')}</span></div>`).join('');
+ let main='';
+ if(MG.state==='pick')main=`<div style="text-align:center;padding:30px"><div style="font-size:90px">💰</div><h1>Кім миллионер болғысы келеді?</h1><p class="mut">15 сұрақ · 5 және 10-сұрақ – «күйіп кетпейтін» сома<br>Көмек: 50:50 · 📞 Досқа қоңырау · 👥 Залдан көмек (телефоннан дауыс)</p><div id="mgName" style="font:900 34px Nunito;color:#ffcf4a;margin:14px 0">${MG.pl?esc(MG.pl.n):''}</div>
+   <button class="btn gold" style="font-size:20px" onclick="mgPick()">🎲 Ойыншыны таңдау</button> ${MG.pl?`<button class="gplay" onclick="mgQ();mgDraw()">▶ ОЙЫНДЫ БАСТАУ</button>`:''}</div>`;
+ else if(MG.state==='end')main=`<div style="text-align:center;padding:30px"><div style="font-size:90px">${MG.win?'🏆':'💸'}</div><h1>${esc(MG.pl.n)}: ${MG.prize.toLocaleString('ru')} ұпай!</h1><p style="font-size:20px">${MG.win?'МИЛЛИОНЕР! 🎉':'Жақсы ойын!'} Журналға: <b>${MG.pts} балл</b></p><button class="gplay" onclick="MG={i:0,life:{f:1,c:1,h:1},pl:null,state:'pick',hid:[]};mgDraw()">🔁 Жаңа ойыншы</button></div>`;
+ else{const q=MG.q;main=`<div class="row" style="justify-content:space-between;margin-bottom:8px"><span style="font:900 22px Nunito;color:#ffcf4a">👤 ${esc(MG.pl.n)}</span><span class="pill" style="background:#ffcf4a;color:#141b4d;font-size:18px">${MG.i+1}-сұрақ · ${MLAD[MG.i].toLocaleString('ru')}</span></div>
+   <div class="mq">${q.q}</div><div class="mch">${q.choices.map((c,j)=>`<button class="${MG.hid.includes(j)?'hid':''} ${MG.sel===j?'sel':''} ${MG.state==='show'?(c===q.ans?'ok':MG.sel===j?'no':''):''}" onclick="mgSel(${j})"><b>${L4[j]}:</b>${c}</button>`).join('')}</div>
+   <div class="mlife"><button ${MG.life.f&&MG.state==='q'&&q.choices.length===4?'':'disabled'} onclick="mg50()">50:50</button><button ${MG.life.c&&MG.state==='q'?'':'disabled'} onclick="mgCall()">📞</button><button ${MG.life.h&&MG.state==='q'?'':'disabled'} onclick="mgHall()">👥</button></div>
+   <div id="mgx">${MG.friend?`<p style="text-align:center;font:900 20px Nunito">📞 Көмекші дос: <span style="color:#ffcf4a">${esc(MG.friend)}</span> (30 секунд)</p>`:''}${MG.votes?mgVotesHTML():''}</div>
+   <div style="text-align:center;margin-top:10px">${MG.state==='q'?`<button class="gplay" ${MG.sel==null?'disabled style="opacity:.5"':''} onclick="mgFinal()">✔ Соңғы жауап!</button> <button class="btn ghost" onclick="mgTake()">💼 Ақшаны алып кету</button>`:MG.ok?`<button class="gplay" onclick="mgNext()">➡ Келесі сұрақ</button>`:''}</div>`}
+ o.innerHTML=`<div class="gvin"><div class="gtop"><h1>💰 Кім миллионер?</h1><button class="btn ghost" onclick="mgClose()">✕ Жабу</button></div><div class="gcols" style="grid-template-columns:3fr 1fr;margin-top:12px"><div class="gpan">${main}</div><div class="gpan mlad">${lad}</div></div></div>`}
+function mgPick(){const r=TL.meta&&TL.meta.roster;if(!r){toast('Сынып тізімі жоқ');return}const {ids,c}=fairOrder([]);const mn=c[ids[0]],pool=ids.filter(s=>c[s]===mn),all=Object.keys(r);let k=0;
+ const sp=setInterval(()=>{const e=document.getElementById('mgName');if(e)e.textContent=r[pick(all)].n;sfx('tick');if(++k>16){clearInterval(sp);const sid=pick(pool);MG.pl={sid,n:r[sid].n};sfx('pick');mgDraw()}},70)}
+function mgSel(j){if(MG.state!=='q'||MG.hid.includes(j))return;MG.sel=j;sfx('click');mgDraw()}
+function mg50(){const q=MG.q,wr=q.choices.map((c,j)=>j).filter(j=>q.choices[j]!==q.ans);MG.hid=shuf(wr).slice(0,2);MG.life.f=0;sfx('unlock');mgDraw()}
+function mgCall(){const r=TL.meta.roster;const {ids}=fairOrder([MG.pl.sid]);MG.friend=r[ids[0]].n;MG.life.c=0;sfx('pick');mgDraw()}
+async function mgHall(){MG.life.h=0;MG.votes={};if(!backend||!tCode){toast('👥 Интернет жоқ: сыныптан қол көтертіп санаңыз');MG.votes=null;mgDraw();return}
+ await metaSet('mill',{on:true,qid:MG.qid,q:MG.q.q,ch:MG.q.choices.filter((c,j)=>!MG.hid.includes(j)).length?MG.q.choices.map((c,j)=>MG.hid.includes(j)?'':c):MG.q.choices});
+ const ref=backend.ref(CROOT(tCode)+'/players');const h=sn=>{const v=sn.val()||{};const t={};Object.values(v).forEach(x=>{if(x&&x.mv&&x.mv.qid===MG.qid)t[x.mv.i]=(t[x.mv.i]||0)+1});MG.votes=t;const e=document.getElementById('mgx');if(e)e.innerHTML=mgVotesHTML()};ref.on('value',h);MG.voff=()=>ref.off('value',h);sfx('go');mgDraw()}
+function mgVotesHTML(){const t=MG.votes||{},n=Object.values(t).reduce((a,b)=>a+b,0)||1;return `<div class="gpan" style="margin-top:8px"><b>👥 Залдың дауысы (${Object.values(t).reduce((a,b)=>a+b,0)})</b>${MG.q.choices.map((c,j)=>MG.hid.includes(j)?'':`<div class="vbar"><span style="width:26px">${'ABCD'[j]}</span><i style="width:${Math.round((t[j]||0)/n*260)}px"></i><span>${Math.round((t[j]||0)/n*100)}%</span></div>`).join('')}</div>`}
+async function mgStopVote(){if(MG.voff){MG.voff();MG.voff=null;await metaSet('mill',{on:false})}}
+async function mgFinal(){if(MG.sel==null)return;await mgStopVote();MG.state='show';MG.ok=MG.q.choices[MG.sel]===MG.q.ans;mgDraw();sfx(MG.ok?'ok':'bad');
+ if(MG.ok&&MG.i===14)setTimeout(()=>mgEnd(MLAD[14],true),1200);else if(!MG.ok)setTimeout(()=>mgEnd(MG.i>=10?MLAD[9]:MG.i>=5?MLAD[4]:0,false),1800)}
+function mgNext(){MG.i++;MG.friend=null;mgQ();mgDraw()}
+async function mgTake(){await mgStopVote();mgEnd(MG.i>0?MLAD[MG.i-1]:0,false)}
+async function mgEnd(prize,win){MG.state='end';MG.prize=prize;MG.win=win;const lv=MLAD.indexOf(prize);MG.pts=lv>=9?3:lv>=4?2:1;sfx(win||lv>=9?'win':'coin');mgDraw();TL.cur=MG.pl;await givePoints(MG.pts);mgDraw()}
+async function mgClose(){if(MG)await mgStopVote();MG=null;const o=document.getElementById('mgov');if(o)o.remove();if(TL)drawSlide()}
+/* --- оқушы телефонында залдан көмек --- */
+function stVoteDraw(){let b=document.getElementById('stvote');if(!MV){if(b)b.remove();return}if(S.mv&&S.mv.qid===MV.qid){if(b)b.innerHTML='<b>✔ Дауысың қабылданды!</b>';return}
+ if(!b){b=document.createElement('div');b.id='stvote';b.className='gov';b.style.cssText+='inset:auto 0 0 0;max-height:70vh;border-radius:24px 24px 0 0';document.body.appendChild(b)}
+ b.innerHTML=`<div class="gvin" style="max-width:600px"><h2 style="margin:0 0 6px">👥 Залдан көмек! Дұрыс жауапқа дауыс бер:</h2><div class="mq" style="font-size:20px">${MV.q}</div><div class="mch">${MV.ch.map((c,j)=>c===''?'':`<button onclick="stVote(${j})"><b>${'ABCD'[j]}:</b>${c}</button>`).join('')}</div></div>`;sfx('go')}
+function stVote(j){S.mv={qid:MV.qid,i:j};const mp=myPath();if(backend&&mp)backend.ref(mp+'/mv').set(S.mv).catch(()=>{});saveLocal();sfx('ok');const b=document.getElementById('stvote');if(b){b.innerHTML='<div class="gvin"><h2>✔ Дауысың қабылданды!</h2></div>';setTimeout(()=>b.remove(),1500)}}
 
 /* =====================================================================
    ІСКЕ ҚОСУ
