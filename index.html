@@ -269,6 +269,11 @@ table.t th{background:linear-gradient(180deg,#f5f7ff,#eef1fb)}
 .wpad{margin:12px 0;border-radius:16px;border:2px dashed #b9c1e6;background:#fff;overflow:hidden}.wphead{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f4f6ff;border-bottom:1px solid #e3e7f2;flex-wrap:wrap}.wphead .mut{font-size:12px}
 .wpad canvas{display:block;width:100%;touch-action:none;cursor:crosshair;background-image:linear-gradient(#eef1f8 1px,transparent 1px),linear-gradient(90deg,#eef1f8 1px,transparent 1px);background-size:24px 24px}
 .wpc{width:24px;height:24px;border-radius:50%;border:3px solid #fff;outline:2px solid #ccd;cursor:pointer}.wpc.on{outline-color:#141b4d}.wpe,.wpx{border:0;background:#fff;border-radius:8px;padding:3px 7px;cursor:pointer;font-size:15px}.wpe.on{background:#ffd54a}
+#kmjov{position:fixed;inset:0;z-index:940;background:rgba(14,20,56,.6);display:flex;flex-direction:column;align-items:center;overflow:auto;padding:16px}
+.kmjbar{position:sticky;top:0;z-index:2;width:min(1000px,100%);display:flex;gap:8px;align-items:center;background:#fff;border-radius:16px;padding:10px 14px;box-shadow:0 8px 20px rgba(0,0,0,.2);margin-bottom:10px;flex-wrap:wrap}
+.kmjpage{width:min(1000px,100%);background:#fff;border-radius:10px;padding:26px 30px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.kd{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}.kd th,.kd td{border:1px solid #c9cfe3;padding:6px 8px;vertical-align:top;text-align:left}.kd th{background:#f1f3fb;width:150px}.kd ul{margin:0;padding-left:18px}.kst th{width:auto}.kst td:first-child{width:90px}
+.kmjlist{display:flex;flex-direction:column;gap:6px}.kmjrow{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:8px 12px;box-shadow:0 2px 0 #e3e7f2}.kmjrow.own{box-shadow:0 0 0 2px #1d9d62 inset}.kn{font-weight:900;width:44px}.kdt{color:var(--mut);width:70px;font-weight:700}.kt{flex:1;font-weight:700}
 </style>
 </head>
 <body>
@@ -1758,7 +1763,7 @@ function renderTeacher(){
   if(tArea==='board')tTab='lesson';
   app().innerHTML=`<div class="card tarea"><div class="row" style="justify-content:space-between"><h1 style="margin:0">${AREA[0]}</h1><button class="btn ghost" id="toff">Шығу</button></div>${AREA[1].length?`<div class="steps">${AREA[1].map(([k,t])=>`<button class="${tTab===k?'on':''}" onclick="tTab='${k}';renderTeacher()">${t}</button>`).join('')}</div>`:''}</div><div id="tbody"></div>`;
   document.getElementById('toff').onclick=()=>{teacher=false;renderMe();renderHome()};
-  ({lesson:teacherLessons,mon:teacherMonitor,cls:teacherClasses,journal:teacherJournal,kmj:teacherKMJ,note:teacherNote})[tTab]();
+  ({lesson:teacherLessons,mon:teacherMonitor,cls:teacherClasses,journal:teacherJournal,kmj:teacherKMJAll,note:teacherNote})[tTab]();
 }
 let rTab='all';
 const subjStat=(stars,subj)=>{const ks=Object.keys(stars||{}).map(Number).filter(p=>subj==='alg'?p<100:p>100);return {n:ks.length,st:ks.reduce((a,p)=>a+(stars[p]||0),0)}};
@@ -2788,7 +2793,7 @@ function renderKTP(){
      <td class="kobj">${esc(r.o).replace(/(\d\.\d\.\d\.\d+)/g,'<b>$1</b>')}</td>
      <td>${ls.map(l=>`<span class="pill" style="font-size:11px;margin:1px">§ ${l.num}</span>`).join('')}</td>
      <td style="white-space:nowrap">${(()=>{const op=!!OPENK[kKey(ktpSubj,r)];
-       if(teacher)return `${r.k==='les'?`<button class="btn" style="padding:6px 10px;font-size:13px" onclick="teachLesson(ktpLesson('${ktpSubj}',${i}))">▶ Сабақ</button> `:''}<button class="btn ${op?'ok':'ghost'}" style="padding:6px 10px;font-size:13px" title="${op?'Оқушыларға ашық. Басса – жабылады':'Оқушыларға ашу'}" onclick="setOpen('${ktpSubj}',${i},${!op}).then(renderKTP)">${op?'🔓 Ашық':'🔒 Ашу'}</button> <button class="btn ghost" style="padding:6px 8px;font-size:13px" title="Алдын ала қарау" onclick="openKTP('${ktpSubj}',${i})">👁</button>`;
+       if(teacher)return `${r.k==='les'?`<button class="btn" style="padding:6px 10px;font-size:13px" onclick="teachLesson(ktpLesson('${ktpSubj}',${i}))">▶ Сабақ</button> `:''}<button class="btn ${op?'ok':'ghost'}" style="padding:6px 10px;font-size:13px" title="${op?'Оқушыларға ашық. Басса – жабылады':'Оқушыларға ашу'}" onclick="setOpen('${ktpSubj}',${i},${!op}).then(renderKTP)">${op?'🔓 Ашық':'🔒 Ашу'}</button> <button class="btn ghost" style="padding:6px 8px;font-size:13px" title="ҚМЖ" onclick="openKMJ('${ktpSubj}',${i})">📝</button> <button class="btn ghost" style="padding:6px 8px;font-size:13px" title="Алдын ала қарау" onclick="openKTP('${ktpSubj}',${i})">👁</button>`;
        const can=S&&S.code?op:true;
        return can?`<button class="btn ${op?'':'ghost'}" style="padding:6px 12px;font-size:13px" onclick="openKTP('${ktpSubj}',${i})">${r.k==='les'?'Ашу':'Тапсыру'}</button>`:`<span class="pill" style="font-size:12px" title="Мұғалім сабақты өткізіп, рұқсат бергенде ашылады">🔒 Жабық</span>`})()}</td></tr>`});
   app().innerHTML=h+`</table></div>`;
@@ -3117,6 +3122,40 @@ function addPad(box,h=260){if(!box)return;const w=document.createElement('div');
  w.querySelectorAll('.wpc').forEach(b=>b.onclick=()=>{col=b.dataset.c;er=false;w.querySelectorAll('.wpc').forEach(x=>x.classList.toggle('on',x===b));w.querySelector('.wpe').classList.remove('on')});
  w.querySelector('.wpe').onclick=e=>{er=!er;e.currentTarget.classList.toggle('on',er)};
  w.querySelector('.wpx').onclick=()=>ctx.clearRect(0,0,cv.width,cv.height)}
+
+/* ---------- 📝 әр сабақтың ҚМЖ-сы: жүктелгені немесе платформа құрастырған ---------- */
+const VALUES=['Тәуелсіздік және отаншылдық','Бірлік және ынтымақ','Әділдік және жауапкершілік','Заң және тәртіп','Еңбекқорлық және кәсіби біліктілік','Жасампаздық және жаңашылдық'];
+const txt=h=>{const d=document.createElement('div');d.innerHTML=h||'';return d.textContent.replace(/\s+/g,' ').trim()};
+const pq=p=>txt(p.q)+(p.choices?' ('+p.choices.join('; ')+')':'');const pa=p=>p.choices?p.ans:fnum(p.ans);
+function kmjDoc(sb,idx){const r=KTP[sb][idx],K=kmjOf(sb,r),L0=ktpLesson(sb,idx),X=secX(L0),subjN=sb==='alg'?'Алгебра':'Геометрия';
+ const val=K?K.val:VALUES[(r.n+r.q)%VALUES.length],aims=K?K.aims:[`<b>Барлық оқушылар:</b> «${esc(r.t)}» тақырыбының негізгі ұғымдары мен ережесін біледі, A деңгейлі тапсырмаларды орындайды`,`<b>Көпшілігі:</b> ережені есептерде қолданады, B деңгейлі тапсырмаларды шешу жолымен орындайды`,`<b>Кейбір оқушылар:</b> стандарттан тыс, өмірлік және геометриялық есептерді (C деңгей) шешеді`];
+ const head=`<table class="kd"><tr><th>Пән</th><td>${subjN}</td><th>Сынып</th><td>7</td></tr><tr><th>Педагог</th><td>Егемберді Төлен Қайсарұлы</td><th>Күні</th><td>${fmtD(r.d)} · №${r.n} (${r.q}-тоқсан)</td></tr>
+  <tr><th>Сабақтың тақырыбы</th><td colspan="3"><b>${esc(K?K.t:r.t)}</b></td></tr><tr><th>Оқу мақсаттары</th><td colspan="3">${esc(r.o||'')}</td></tr>
+  <tr><th>Сабақтың мақсаты</th><td colspan="3"><ul>${aims.map(a=>`<li>${a}</li>`).join('')}</ul></td></tr><tr><th>Құндылық</th><td colspan="3">${val}</td></tr>
+  <tr><th>Ресурстар</th><td colspan="3">Оқулық: ${L0.ktp.ps.map(p=>{const x=p===200?REV6:L.find(l=>l.p===p);return x?'§ '+x.num+'. '+x.t:''}).join('; ')}; MathLevel Up платформасы (интерактивті тақта, оқушы панелі)</td></tr></table>`;
+ let rows=[];const row=(st,m,te,stu,ass,res)=>rows.push(`<tr><td><b>${st}</b><br>${m} мин</td><td>${te}</td><td>${stu}</td><td>${ass}</td><td>${res}</td></tr>`);
+ if(r.k!=='les'){rows=[];row('Жиынтық бағалау',40,`${r.k==='tjb'?'Тоқсандық':'Бөлім бойынша'} жиынтық бағалау: ${r.k==='tjb'?15:10} тапсырма өтілген параграфтардан платформада құрылады.`,'Тапсырмаларды жеке орындайды.','Балл → пайыз → баға, журналға автоматты түседі.','ҚТЖ → «Тапсыру»');row('Соңы',5,'Нәтижені талдау, жеке даму картасын қарау.','Өз қателерін талдайды.','Рефлексия','«Жеке даму» беті')}
+ else if(K){row('Басы',1,K.mood,'Бір-біріне тілек айтады; көңіл-күйге дауыс береді.','—','«Ахуал» экраны');row('',3,'Үй жұмысын тексеру: '+K.home,'Жауап береді, түсіндіреді.','Мұғалімнің кері байланысы','Платформа');
+  K.st.forEach(x=>row(x.s==='Бекіту'?'Бекіту':'Ортасы',x.m,`<b>${x.n}</b> (${x.f}).<br>${txt(x.t)}`,`Тапсырманы орындайды.<br><i>Жауабы:</i> ${txt(x.a)}`,`<b>Дескриптор (${x.b} б.):</b><ul>${x.d.map(d=>`<li>${d}</li>`).join('')}</ul>`,'Тақтада ұқсас тапсырмалар (шексіз)'));
+  row('Соңы',5,'Рефлексия: '+K.refl+'<br>Үй тапсырмасы: '+K.hw,'Өз деңгейін бағалайды.','Тірі диаграмма','«Кері байланыс» экраны')}
+ else{const A=plainOf(L0.gA),Bp=plainOf(L0.gB),C=plainOf(L0.gC),bo=plainOf([...L0.gA,...L0.gB]),prv=(L0.qs||[]).slice(0,2),V=VIS[visFor(L0)];
+  row('Басы',2,`Психологиялық ахуал: «${X.mood[0]}» (${X.mood[1].map(o=>o[0]+' – '+o[1]).join('; ')}).`,'Көңіл-күйіне сай дауыс береді.','—','«Ахуал» экраны');
+  row('',3,'Өткенді еске түсіру: '+(prv.length?prv.map(q=>q[0]).join(' '):'ауызша сұрақтар'),'Ауызша жауап береді.','Ауызша кері байланыс','Платформа');
+  row('Ортасы',8,`Жаңа сабақ: ${esc(txt(L0.th).slice(0,380))}…<br><b>Формула:</b> ${txt(L0.f)}<br>🎬 ${V.t}.`,'Тыңдайды, 3D/анимацияны бақылап, заңдылықты өзі тұжырымдайды.','Сұрақ-жауап','«Жаңа сабақ», «3D / анимация»');
+  row('',8,`Оқулықпен жұмыс (саралап):<br>A: ${pq(A)}<br>B: ${pq(Bp)}<br>C: ${pq(C)}`,`Деңгейін таңдап орындайды.<br><i>Жауаптары:</i> A – ${pa(A)}; B – ${pa(Bp)}; C – ${pa(C)}`,'<b>Дескриптор:</b><ul><li>A – формуланы дұрыс қолданады (1 б.)</li><li>B – шешу жолын толық жазады (2 б.)</li><li>C – стандарттан тыс есепті шешеді (3 б.)</li></ul>','«Оқулықпен жұмыс» экраны');
+  row('',7,`Тақтаға кездейсоқ шақыру / тақтада бірге (2–5 оқушы). Мысалы: ${pq(bo)}`,'Тақтада шешу жолын жазып, жауабын енгізеді.','Платформа бағалайды: ✔ 3 б., ✘ 1 б.; дәптерге – мұғалім (телефоннан)','«Тақтаға кездейсоқ», «Тақтада бірге»');
+  row('',6,'Топтар жарысы: 5 раунд, секундомер.','Топпен бір уақытта шешеді.','Уақыт пен дұрыстық бойынша ұпай','«Топтар жарысы»');
+  row('Соңы',4,`Кері байланыс: «${X.fb[0]}» (${X.fb[1].map(o=>o[0]+' – '+o[1]).join('; ')}).<br>Үй тапсырмасы: оқулық § ${L0.num}; платформада кемінде 15 есеп.`,'Түсінігін бағалайды.','Тірі диаграмма','«Кері байланыс» экраны')}
+ return `<div class="kmjdoc"><h2 style="text-align:center;margin:0 0 4px">Қысқа мерзімді жоспар</h2><p style="text-align:center;margin:0 0 10px" class="mut">${K?'Мұғалімнің ҚМЖ-сы':'Платформа құрастырған ҚМЖ (сабақ экрандарына сай)'}</p>${head}
+  <table class="kd kst"><tr><th>Кезең / уақыт</th><th>Педагогтің әрекеті</th><th>Оқушының әрекеті</th><th>Бағалау</th><th>Ресурстар</th></tr>${rows.join('')}</table></div>`}
+function openKMJ(sb,idx){const r=KTP[sb][idx];let o=document.getElementById('kmjov');if(!o){o=document.createElement('div');o.id='kmjov';document.body.append(o)}
+ o.innerHTML=`<div class="kmjbar"><b>📝 ҚМЖ · ${fmtD(r.d)}</b><span style="flex:1"></span><button class="btn" onclick="teacher=true;document.getElementById('kmjov').remove();teachLesson(ktpLesson('${sb}',${idx}))">🖥 Тақтада ашу</button><button class="btn ghost" onclick="kmjWord('${sb}',${idx})">⬇ Word</button><button class="btn ghost" onclick="kmjPrint()">🖨 Басып шығару</button><button class="btn ghost" onclick="document.getElementById('kmjov').remove()">✕</button></div><div class="kmjpage" id="kmjpage">${kmjDoc(sb,idx)}</div>`}
+const KDCSS='body{font-family:"Times New Roman",serif;font-size:12pt}table{border-collapse:collapse;width:100%;margin:6px 0}th,td{border:1px solid #555;padding:4px 6px;vertical-align:top;text-align:left}th{background:#eef1fb}ul{margin:0;padding-left:16px}h2{font-size:14pt}';
+function kmjWord(sb,idx){const r=KTP[sb][idx],html=`<html><head><meta charset="utf-8"><style>${KDCSS}</style></head><body>${document.getElementById('kmjpage').innerHTML}</body></html>`;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+html],{type:'application/msword'}));a.download=`ҚМЖ_${sb==='alg'?'алгебра':'геометрия'}_${r.d}_№${r.n}.doc`;document.body.append(a);a.click();a.remove()}
+function kmjPrint(){const w=window.open('','_blank');if(!w){toast('Басып шығару терезесі бұғатталды');return}w.document.write(`<html><head><meta charset="utf-8"><title>ҚМЖ</title><style>${KDCSS}</style></head><body>${document.getElementById('kmjpage').innerHTML}</body></html>`);w.document.close();w.focus();w.print()}
+function teacherKMJAll(){const box=document.getElementById('tbody');const rows=KTP[ktpSubj];if(ktpQ==null)ktpQ=2;
+ box.innerHTML=`<div class="card"><div class="steps" style="margin:0 0 10px">${[['alg','🔢 Алгебра'],['geo','📐 Геометрия']].map(([k,n])=>`<button class="${ktpSubj===k?'on':''}" onclick="ktpSubj='${k}';teacherKMJAll()">${n}</button>`).join('')}</div><div class="steps" style="margin:0">${[1,2,3,4].map(q=>`<button class="${ktpQ===q?'on':''}" onclick="ktpQ=${q};teacherKMJAll()">${q}-тоқсан</button>`).join('')}</div></div>
+ <div class="kmjlist">${rows.map((r,i)=>r.q!==ktpQ?'':`<div class="kmjrow ${kmjOf(ktpSubj,r)?'own':''}"><span class="kn">№${r.n}</span><span class="kdt">${fmtD(r.d)}</span><span class="kt">${esc(r.t)}${r.k!=='les'?` <span class="pill" style="font-size:11px">${r.k==='tjb'?'ТЖБ':'БЖБ'}</span>`:''}</span><span class="pill" style="font-size:11px;background:${kmjOf(ktpSubj,r)?'#e3f5ec':'#eef0fb'}">${kmjOf(ktpSubj,r)?'мұғалімнің ҚМЖ':'автоматты ҚМЖ'}</span><button class="btn ghost" style="padding:5px 12px" onclick="openKMJ('${ktpSubj}',${i})">📝 Ашу</button></div>`).join('')}</div>`}
 /* ---------- 🏠 бастапқы бет ---------- */
 const ACH=[['🏆','«Жаңашыл ұстаз»','І орын'],['🥇','«Мәңгілік ел ұстаздары»','І орын'],['🎓','«Парасатты педагог»','І дәрежелі диплом'],['⭐','«Үздік педагог»','І дәрежелі диплом'],['🧮','«Алтын сақа» олимпиадасы','шәкірттері: 4 диплом (аудан)'],['📚','Біліктілік курстары','функциялар мен графиктерді оқыту әдістемесі; «Өрлеу», 80 сағ']];
 function renderHome(){view='home';setNav();
